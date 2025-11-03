@@ -239,6 +239,11 @@ public class GameScreen extends Screen {
             returnCode = 1;
             this.isRunning = false;
         }
+        // Pause 상태에서 Enter → 즉시 종료하고 점수 화면으로
+        if (this.isPaused && inputManager.isKeyDown(KeyEvent.VK_ENTER)) {
+            earlyExitToScore();
+            return;
+        }
 
         if (!this.isPaused) {
             if (this.inputDelay.checkFinished() && !this.levelFinished) {
@@ -400,6 +405,12 @@ public class GameScreen extends Screen {
 		);
 		if(this.isPaused){
 			drawManager.drawPauseOverlay(this);
+            // pause 화면에서 표시
+            drawManager.drawCenteredRegularString(
+                    this,
+                    "[ENTER] Finish and Show Score  |  [ESC] Resume",
+                    this.height / 2 + 60
+            );
 		}
 
         drawManager.completeDrawing(this);
@@ -592,5 +603,10 @@ public class GameScreen extends Screen {
         if(state.getScore()>=3000){
             achievementManager.unlock("Get 3000 Score");
         }
+    }
+    private void earlyExitToScore() {
+        SoundManager.stopBackgroundMusic();
+        // 목숨 0으로
+        while (state.getLives() > 0) state.decLife();
     }
 }
