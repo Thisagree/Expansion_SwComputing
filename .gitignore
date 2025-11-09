@@ -20,7 +20,14 @@ gradle-app.setting
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
-/.idea/
+#############
+## Custom
+#############
+
+log*
+.checkstyle
+.idea/
+.vscode/
+*.iml
+*.class
 /out/
-log
-/Expansion_SwComputing_sub.iml

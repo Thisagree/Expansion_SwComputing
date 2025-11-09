@@ -247,19 +247,29 @@ public class GameScreen extends Screen {
 
         if (!this.isPaused) {
             if (this.inputDelay.checkFinished() && !this.levelFinished) {
-                boolean moveRight, moveLeft, fire;
+                boolean moveRight, moveLeft, moveUp, moveDown, fire;
                 moveRight = inputManager.isP1RightPressed();
                 moveLeft = inputManager.isP1LeftPressed();
+                moveUp = inputManager.isP1UpPressed();
+                moveDown = inputManager.isP1DownPressed();
                 fire = inputManager.isP1ShootPressed();
 
                 boolean isRightBorder = ship.getPositionX() + ship.getWidth() + ship.getSpeed() > this.width - 1;
 
                 boolean isLeftBorder = ship.getPositionX() - ship.getSpeed() < 1;
 
+                boolean isUpBorder = ship.getPositionY() + ship.getHeight() + ship.getSpeed() > this.height - 1;
+
+                boolean isDownBorder = ship.getPositionY() - ship.getSpeed() < 1;
+
                 if (moveRight && !isRightBorder)
                     ship.moveRight();
                 if (moveLeft && !isLeftBorder)
                     ship.moveLeft();
+                if (moveUp && !isUpBorder)
+                    ship.moveUp();
+                if (moveDown && !isDownBorder)
+                    ship.moveDown();
 
                 fire = inputManager.isKeyDown(KeyEvent.VK_SPACE);
 

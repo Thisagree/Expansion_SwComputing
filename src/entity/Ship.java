@@ -128,6 +128,12 @@ public class Ship extends Entity {
     public final void moveLeft() {
         this.positionX -= this.moveSpeed;
     }
+    public final void moveUp() {
+        this.positionY -= this.moveSpeed;
+    }
+    public final void moveDown() {
+        this.positionY += this.moveSpeed;
+    }
 
     /**
      * Shoots a bullet based on ship type and active effects.
