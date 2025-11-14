@@ -71,9 +71,9 @@ public class PlayerShip extends Entity {
     /**
      * Moves the ship speed units left, or until the left screen border is reached.
      */
-    public final void moveLeft() {
-        this.positionX -= stats.getMoveSpeed();
-    }
+    public final void moveLeft() { this.positionX -= stats.getMoveSpeed(); }
+    public final void moveUp() { this.positionY -= stats.getMoveSpeed(); }
+    public final void moveDown() { this.positionY += stats.getMoveSpeed(); }
 
     /**
      * Shoots a bullet based on ship type and active effects.
