@@ -128,7 +128,9 @@ public final class InputManager implements KeyListener, MouseListener, MouseMoti
      * @return True if Player 1 is moving right
      */
 
-    public boolean isP1RightPressed() {return isKeyDown(player1Keys[1]);}
+    public boolean isP1RightPressed() {
+        return isKeyDown(player1Keys[1]);
+    }
 
     /**
      * Checks if Player 1's shoot key (player1keys[2]) is pressed.

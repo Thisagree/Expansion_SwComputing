@@ -19,9 +19,9 @@ import java.util.logging.Logger;
 import Animations.BasicGameSpace;
 import Animations.Explosion;
 import Animations.MenuSpace;
+import entity.PlayerShip;
 import screen.Screen;
 import entity.Entity;
-import entity.Ship;
 import entity.Bullet;
 
 /**
@@ -73,15 +73,15 @@ public final class DrawManager {
     /** Sprite types. */
     public enum SpriteType {
         /** Player ship. */
-        Ship1,
-        Ship2,
-        Ship3,
-        Ship4,
+        Normal,
+        BigShot,
+        DoubleShot,
+        MoveFast,
         /** Destroyed player ship. */
-        ShipDestroyed1,
-        ShipDestroyed2,
-        ShipDestroyed3,
-        ShipDestroyed4,
+        ShipDestroyedNormal,
+        ShipDestroyedBigShot,
+        ShipDestroyedDoubleShot,
+        ShipDestroyedMoveFast,
         /** Player bullet. */
         Bullet,
         /** Enemy bullet. */
@@ -124,14 +124,14 @@ public final class DrawManager {
         try {
             spriteMap = new LinkedHashMap<>();
 
-            spriteMap.put(SpriteType.Ship1, new boolean[13][8]);
-            spriteMap.put(SpriteType.Ship2, new boolean[13][8]);
-            spriteMap.put(SpriteType.Ship3, new boolean[13][8]);
-            spriteMap.put(SpriteType.Ship4, new boolean[13][8]);
-            spriteMap.put(SpriteType.ShipDestroyed1, new boolean[13][8]);
-            spriteMap.put(SpriteType.ShipDestroyed2, new boolean[13][8]);
-            spriteMap.put(SpriteType.ShipDestroyed3, new boolean[13][8]);
-            spriteMap.put(SpriteType.ShipDestroyed4, new boolean[13][8]);
+            spriteMap.put(SpriteType.Normal, new boolean[13][8]);
+            spriteMap.put(SpriteType.BigShot, new boolean[13][8]);
+            spriteMap.put(SpriteType.DoubleShot, new boolean[13][8]);
+            spriteMap.put(SpriteType.MoveFast, new boolean[13][8]);
+            spriteMap.put(SpriteType.ShipDestroyedNormal, new boolean[13][8]);
+            spriteMap.put(SpriteType.ShipDestroyedBigShot, new boolean[13][8]);
+            spriteMap.put(SpriteType.ShipDestroyedDoubleShot, new boolean[13][8]);
+            spriteMap.put(SpriteType.ShipDestroyedMoveFast, new boolean[13][8]);
             spriteMap.put(SpriteType.Bullet, new boolean[3][5]);
             spriteMap.put(SpriteType.EnemyBullet, new boolean[3][5]);
             spriteMap.put(SpriteType.EnemyShipA1, new boolean[12][8]);
@@ -273,7 +273,7 @@ public final class DrawManager {
         Color color = entity.getColor();
 
         // Color-code by player when applicable
-        if (entity instanceof Ship ship) {
+        if (entity instanceof PlayerShip playerShip) {
             color = Color.BLUE;
             // else leave default (e.g., green) for legacy/unknown
         }
@@ -288,7 +288,7 @@ public final class DrawManager {
           and sets its color alpha to 32 to indicate critical damage.
          */
         if (entity instanceof entity.EnemyShip enemy) {
-            if((enemy.getSpriteType() == SpriteType.EnemyShipA1 || enemy.getSpriteType() == SpriteType.EnemyShipA2) && enemy.getHealth() == 1)
+            if((enemy.getSpriteType() == SpriteType.EnemyShipA1 || enemy.getSpriteType() == SpriteType.EnemyShipA2) && enemy.getStats().getHp() == 1)
                 color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 32);
         }
         return color;
@@ -1175,8 +1175,8 @@ public final class DrawManager {
         return centeredStringBounds(screen, items, baselineY);
     }
 
-    public void drawShipSelectionMenu(final Screen screen, final Ship[] shipExamples, final int selectedShipIndex) {
-        Ship ship = shipExamples[selectedShipIndex];
+    public void drawShipSelectionMenu(final Screen screen, final PlayerShip[] playerShipExamples, final int selectedShipIndex) {
+        PlayerShip playerShip = playerShipExamples[selectedShipIndex];
 
         String screenTitle = "PLAYER " + " : CHOOSE YOUR SHIP";
 
@@ -1185,7 +1185,7 @@ public final class DrawManager {
         String[] shipSpeeds = {"SPEED: NORMAL", "SPEED: SLOW", "SPEED: SLOW", "SPEED: FAST"};
         String[] shipFireRates = {"FIRE RATE: NORMAL", "FIRE RATE: NORMAL", "FIRE RATE: NORMAL", "FIRE RATE: SLOW"};
 
-        drawEntity(ship, ship.getPositionX() - ship.getWidth()/2, ship.getPositionY());
+        drawEntity(playerShip, playerShip.getPositionX() - playerShip.getWidth()/2, playerShip.getPositionY());
 //        for (int i = 0; i < 4; i++) {
 //            // Draw Player Ship
 //            drawManager.drawEntity(ship, ship.getPositionX() - ship.getWidth()/2, ship.getPositionY());

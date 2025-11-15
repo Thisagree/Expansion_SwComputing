@@ -4,6 +4,9 @@ package engine;
 import java.util.HashMap;
 import java.util.Map;
 import engine.ItemEffect.ItemEffectType;
+import entity.PlayerShip;
+
+import static engine.DrawManager.SpriteType.Normal;
 
 /**
  * Implements an object that stores the state of the game between levels -
@@ -21,12 +24,12 @@ public class GameState {
 	private int level;
 
 	/** life */
-	private int lives;
     private int score;
     private int bulletsShot;
     private int shipsDestroyed;
 	/** Current coin count. */ // ADD THIS LINE
     private static int coins = 0;
+    private PlayerShip playerShip;
 
     private static class EffectState {
         Cooldown cooldown;
@@ -43,10 +46,10 @@ public class GameState {
     /** Each player has all effect types always initialized (inactive at start). */
     private final Map<ItemEffectType, EffectState> playerEffects = new HashMap<>();
 
-	public GameState(final int level, final int lives, final int coin) {
+	public GameState(DrawManager.SpriteType shipType, final int level, final int coin) {
+        this.playerShip = new PlayerShip(260, 420, shipType, this);
 		this.level = level;
         coins = coin;
-        this.lives = lives;
         initializeEffectStates();
     }
 
@@ -60,8 +63,6 @@ public class GameState {
 	 *                       Current game level.
 	 * @param score
 	 *                       Current score.
-	 * @param livesRemaining
-	 *                       Lives currently remaining.
 	 * @param bulletsShot
 	 *                       Bullets shot until now.
 	 * @param shipsDestroyed
@@ -69,23 +70,19 @@ public class GameState {
 	 * @param coins          // ADD THIS LINE
 	 *                       Current coin count. // ADD THIS LINE
 	 */
-	public GameState(final int level, final int score, final int livesRemaining, final int bulletsShot, final int shipsDestroyed, final int coins) { // MODIFY THIS LINE
+	public GameState(final PlayerShip playerShip, final int level, final int score, final int bulletsShot, final int shipsDestroyed, final int coins) {
+        this.playerShip = playerShip;
 		this.level = level;
 		this.score = score;
-		this.lives = livesRemaining;
-		this.bulletsShot = bulletsShot;
+        this.bulletsShot = bulletsShot;
 		this.shipsDestroyed = shipsDestroyed;
 		GameState.coins = coins;
         initializeEffectStates();
     }
 
-	public int getScore() {
-		return score;
-	}
+    public PlayerShip getPlayerShip() { return playerShip; }
 
-	public int getLives() {
-		return lives;
-	}
+    public int getScore() { return score; }
 
 	public int getBulletsShot() {
 		return bulletsShot;
@@ -127,33 +124,12 @@ public class GameState {
         return true;
     }
 
-    // 2P mode: decrement life (shared pool if enabled; otherwise per player). */
-    public void decLife() {
-        lives--;
-    }
-
-    // for bonusLife, balance out decLife (+/- life)
-    public void addLife(final int n) {
-        lives = Math.max(0, lives + Math.max(0, n));
-    }
-
-
     public int getLevel() {
 		return level;
 	}
 
 	public void nextLevel() {
 		level++;
-	}
-
-	// Team alive if pool > 0 (shared) or any player has lives (separate).
-	public boolean teamAlive() {
-		return lives > 0;
-	}
-
-	// for ItemEffect.java
-	public int getPlayerLives() {
-		return lives;
 	}
 
     /* ---------- Item effects status methods ---------- **/
