@@ -20,6 +20,7 @@ import Animations.BasicGameSpace;
 import Animations.Explosion;
 import Animations.MenuSpace;
 import entity.PlayerShip;
+import engine.augment.Augment;
 import screen.Screen;
 import entity.Entity;
 import entity.Bullet;
@@ -56,7 +57,7 @@ public final class DrawManager {
     /** Sprite types mapped to their images. */
     private static Map<SpriteType, boolean[][]> spriteMap;
 
-    private final java.util.List<Explosion> explosions = new java.util.ArrayList<>();
+    private final List<Explosion> explosions = new ArrayList<>();
 
     /**
      * Stars background animations for both game and main menu
@@ -776,15 +777,74 @@ public final class DrawManager {
         drawCenteredRegularString(screen, returnMenu, screen.getHeight()-50);
     }//ADD This Screen
 
-    public void drawAugmentOverlay(final Screen screen){
+    /**
+     * Draws basic content of Augment select screen.
+     *
+     * @param screen
+     *                     Screen to draw on.
+     * @param augOption
+     *                     Augments to show.
+     *
+     * 2025-11-16 Added in commit : feat : Add augment select system.
+     */
+    public void drawAugmentOverlay(final Screen screen, List<Augment> augOption, int toggle){
         backBufferGraphics.setColor(new Color(0,0,0,200));
         backBufferGraphics.fillRect(0, 0, screen.getWidth(), screen.getHeight());
 
-        // left Aug
-        // center Aug
-        backBufferGraphics.setColor(Color.GREEN);
-        drawCenteredBigString(screen, "asdfasdfasf" , screen.getHeight()/2);
-        // right Aug
+        int height = screen.getHeight()/3;
+        int gap = 100;
+
+        // Show 3 augment options
+        for (int i = 0; i < augOption.size(); i++) {
+            Augment aug = augOption.get(i);
+            backBufferGraphics.setColor(Color.GRAY);
+            if(toggle == i) backBufferGraphics.setColor(Color.GREEN);
+            drawCenteredBigString(screen, aug.name, height + i * gap);
+            drawCenteredRegularString(screen, aug.description, height + i * gap+ 30);
+        }
+    }
+
+    /**
+     * Draw player's level up toast
+     *
+     * @param screen
+     * Screen to draw on.
+     *
+     * 2025-11-16 Added in commit : feat : Add augment select system.
+     */
+    public void drawLevelUpToast(final Screen screen) {
+        Graphics2D g2d = (Graphics2D) backBufferGraphics.create();
+
+        try {
+            int boxWidth = 350;
+            int boxHeight = 110;
+            int x = (screen.getWidth() - boxWidth) / 2;
+            int y = (screen.getHeight() - boxHeight) / 2;
+
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+            g2d.setColor(Color.BLACK);
+            g2d.fillRoundRect(x, y, boxWidth, boxHeight, 15, 15);
+
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
+            g2d.setColor(Color.GREEN);
+            g2d.setStroke(new BasicStroke(2));
+            g2d.drawRoundRect(x, y, boxWidth, boxHeight, 15, 15);
+
+            g2d.setFont(fontRegular);
+            g2d.setColor(Color.YELLOW);
+
+            String msg = "PLAYER LEVEL UP!";
+            FontMetrics fm = g2d.getFontMetrics();
+            int w = fm.stringWidth(msg);
+
+            g2d.drawString(msg, (screen.getWidth() - w) / 2, y + boxHeight/2 + fm.getAscent()/2);
+
+        } finally {
+            g2d.dispose();
+        }
     }
 
     /**
