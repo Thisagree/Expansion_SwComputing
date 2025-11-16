@@ -14,9 +14,6 @@ public final class BulletPool {
     /** Set of already created bullets. */
     private static final Set<Bullet> pool = new HashSet<Bullet>();
 
-    /**
-     * Constructor, not called.
-     */
     private BulletPool() {
 
     }
@@ -42,8 +39,6 @@ public final class BulletPool {
      */
     public static Bullet getBullet(final int positionX, final int positionY, final int speed, final int width, final int height, final Team team) {
         Bullet bullet;
-        // team setting
-        // bullet size
         if (!pool.isEmpty()) {
             bullet = pool.iterator().next();
             pool.remove(bullet);

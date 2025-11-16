@@ -10,7 +10,7 @@ import engine.DrawManager.SpriteType;
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  *
  */
-public class Entity {
+public class Entity{
 
     /** Position in the x-axis of the upper left corner of the entity. */
     protected int positionX;
@@ -46,8 +46,7 @@ public class Entity {
      * @param color
      *                  Color of the entity.
      */
-    public Entity(final int positionX, final int positionY, final int width,
-                  final int height, final Color color) {
+    public Entity(final int positionX, final int positionY, final int width, final int height, final Color color) {
         this.positionX = positionX;
         this.positionY = positionY;
         this.width = width;
@@ -55,90 +54,38 @@ public class Entity {
         this.color = color;
     }
 
-    /**
-     * Getter for the color of the entity.
-     *
-     * @return Color of the entity, used when drawing it.
-     */
     public final Color getColor() {
         return color;
     }
+    public final void setColor(Color color) { this.color = color; }
 
-    public final void changeColor(Color color) {
-        this.color = color;
-    }
-
-    /**
-     * Getter for the X axis position of the entity.
-     *
-     * @return Position of the entity in the X axis.
-     */
     public final int getPositionX() {
         return this.positionX;
     }
-
-    /**
-     * Getter for the Y axis position of the entity.
-     *
-     * @return Position of the entity in the Y axis.
-     */
-    public final int getPositionY() {
-        return this.positionY;
-    }
-
-    /**
-     * Setter for the X axis position of the entity.
-     *
-     * @param positionX
-     *                  New position of the entity in the X axis.
-     */
     public final void setPositionX(final int positionX) {
         this.positionX = positionX;
     }
 
-    /**
-     * Setter for the Y axis position of the entity.
-     *
-     * @param positionY
-     *                  New position of the entity in the Y axis.
-     */
+    public final int getPositionY() {
+        return this.positionY;
+    }
     public final void setPositionY(final int positionY) {
         this.positionY = positionY;
     }
 
-    /**
-     * Getter for the sprite that the entity will be drawn as.
-     *
-     * @return Sprite corresponding to the entity.
-     */
     public final SpriteType getSpriteType() {
         return this.spriteType;
     }
 
-    /**
-     * Getter for the width of the image associated to the entity.
-     *
-     * @return Width of the entity.
-     */
     public final int getWidth() {
         return this.width;
     }
 
-    /**
-     * Getter for the height of the image associated to the entity.
-     *
-     * @return Height of the entity.
-     */
     public final int getHeight() {
         return this.height;
     }
 
-    // TODO: add team-based canHit() later - friendly fire?
-    public Team getTeam() {
-        return team;
-    }
+    public Team getTeam() { return team; }
 
-    public void setTeam(Team t) {
-        this.team = (t == null ? Team.NEUTRAL : t);
-    }
+    public void setTeam(Team t) { this.team = (t == null ? Team.NEUTRAL : t); }
 }

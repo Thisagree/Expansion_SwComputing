@@ -11,21 +11,11 @@ import engine.DrawManager.SpriteType;
  *
  */
 public class Bullet extends Entity {
-
     /**
      * Speed of the bullet, positive or negative depending on direction -
      * positive is down.
      */
     private int speed;
-
-    /**
-     * 2P mode: id number to specifying who fired the bullet -
-     * 0 = enemy, 1 = P1, 2 = P2
-     **/
-    private int ownerPlayerId = 0;
-
-    // standardised for DrawManager scaling
-    private int playerId = 0;
 
     /**
      * Constructor, establishes the bullet's properties.
@@ -86,23 +76,4 @@ public class Bullet extends Entity {
     public final int getSpeed() {
         return this.speed;
     }
-
-    // 2P mode: adding owner API, standardised player API
-    public final int getOwnerPlayerId() {
-        return ownerPlayerId;
-    }
-
-    public final void setOwnerPlayerId(final int ownerPlayerId) {
-        this.ownerPlayerId = ownerPlayerId;
-    }
-
-    public int getPlayerId() {
-        return this.playerId;
-    }
-
-    public void setPlayerId(int playerId) {
-        this.playerId = playerId;
-        this.ownerPlayerId = playerId; // keep them in sync
-    }
-
 }
