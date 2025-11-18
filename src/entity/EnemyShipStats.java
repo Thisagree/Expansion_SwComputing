@@ -10,13 +10,16 @@ public class EnemyShipStats {
     private int pointValue;
     /** Values of the ship, in coins, when destroyed. */
     private int coinValue;
+    /** Values of the ship, in EXP, when destroyed. */
+    private int expValue;
 
-    public EnemyShipStats(int HP, int ATK, int totalDamage, int pointValue, int coinValue) {
+    public EnemyShipStats(int HP, int ATK, int totalDamage, int pointValue, int coinValue, int exp) {
         this.HP = HP;
         this.ATK = ATK;
         this.totalDamage = totalDamage;
         this.pointValue = pointValue;
         this.coinValue = coinValue;
+        this.expValue = exp;
     }
 
     public int getHp() { return HP; };
@@ -33,4 +36,7 @@ public class EnemyShipStats {
 
     public int getCoinValue() { return coinValue; }
     public void setCoinValue(int coinValue) { this.coinValue = coinValue; }
+
+    public int getExpValue() { return expValue; }
+    public void setExpValue(int expValue) { this.expValue = expValue; }
 }

@@ -9,6 +9,8 @@ import engine.GameSettings;
 import engine.GameState;
 import engine.*;
 import engine.SoundManager;
+import engine.augment.Augment;
+import engine.augment.AugmentPool;
 import entity.*;
 import entity.PlayerShip;
 
@@ -73,7 +75,6 @@ public class GameScreen extends Screen {
     private long highScoreNoticeStartTime;
 
     private boolean isPaused;
-    private boolean isAugSelect;
     private Cooldown pauseCooldown;
     private Cooldown returnMenuCooldown;
 
@@ -390,7 +391,7 @@ public class GameScreen extends Screen {
 		// Aggregate UI (team score & team lives)
 		drawManager.drawScore(this, state.getScore());
         drawManager.drawExp(this, state.getExp());
-        drawManager.drawLives(this, state.getLives());
+        drawManager.drawLives(this, state.getPlayerShip().getStats().getHP());
         drawManager.drawLives(this, playerShip.getStats().getHP());
 		drawManager.drawCoins(this,  state.getCoins()); // ADD THIS LINE - 2P mode: team total
         // 2P mode: setting per-player coin count
@@ -460,6 +461,7 @@ public class GameScreen extends Screen {
             augOption = list.subList(0, Math.min(3, list.size()));
             isAugSelect = true;
             isLevelUpToast = true;
+            cleanBullets();
             SoundManager.playOnce("sound/win.wav");
             levelUpToastStart = System.currentTimeMillis();
         }
@@ -541,9 +543,11 @@ public class GameScreen extends Screen {
         for (Bullet bullet : this.bullets) {
             if (bullet.getSpeed() > 0) {
                 // Enemy bullet vs both players
-                if (playerShip != null && !playerShip.isDestroyed() && checkCollision(bullet, playerShip) && !this.levelFinished) {
+                if (playerShip != null && !playerShip.isDestroyed() && checkCollision(bullet, playerShip) &&
+                        !this.levelFinished) {
                     recyclable.add(bullet);
-                    drawManager.triggerExplosion(playerShip.getPositionX(), playerShip.getPositionY(), false, playerShip.getStats().getHP() == 1);
+                    drawManager.triggerExplosion(playerShip.getPositionX(), playerShip.getPositionY(), false,
+                            playerShip.getStats().getHP() == 1);
                     playerShip.addHit();
 
                     playerShip.destroy(); // explosion/respawn handled by Ship.update()
@@ -573,9 +577,10 @@ public class GameScreen extends Screen {
                         if (enemyShip.isDestroyed()) {
                             int points = enemyShip.getStats().getPointValue();
                             state.addCoins(enemyShip.getStats().getCoinValue()); // 2P mode: modified to per-player coins
-                            int exp = enemyShip.getExpValue();
+                            int exp = enemyShip.getStats().getExpValue();
 
-                            drawManager.triggerExplosion(enemyShip.getPositionX(), enemyShip.getPositionY(), true, finalShip);
+                            drawManager.triggerExplosion(enemyShip.getPositionX(), enemyShip.getPositionY(),
+                                    true, finalShip);
                             state.addScore(points); // 2P mode: modified to add to P1 score for now
                             state.addExp(exp);
                             state.incShipsDestroyed();
@@ -597,7 +602,7 @@ public class GameScreen extends Screen {
 
                 if (this.enemyShipSpecial != null && !this.enemyShipSpecial.isDestroyed() && checkCollision(bullet, this.enemyShipSpecial)) {
                     int points = this.enemyShipSpecial.getStats().getPointValue();
-                    int exp = this.enemyShipSpecial.getExpValue();
+                    int exp = this.enemyShipSpecial.getStats().getExpValue();
 
                     state.addCoins(this.enemyShipSpecial.getStats().getCoinValue()); // 2P mode: modified to per-player coins
 

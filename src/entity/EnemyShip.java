@@ -23,6 +23,9 @@ public class EnemyShip extends Entity {
     /** Number of Coins an enemy per type */
     private static final int BONUS_TYPE_COINS = 10;
 
+    /** EXP value of a bonus enemy. */
+    private static final int BONUS_TYPE_EXP = 100;
+
     /** Cooldown between sprite changes. */
     private Cooldown animationCooldown;
     /** Checks if the ship has been hit by a bullet. */
@@ -46,13 +49,14 @@ public class EnemyShip extends Entity {
         this.animationCooldown = Core.getCooldown(500);
         this.isDestroyed = false;
         if((this.stats = EnemyShipLibrary.getShipList().get(this.spriteType)) == null)
-            this.stats = new EnemyShipStats(1,0,0,0,0);
+            this.stats = new EnemyShipStats(1,0,0,10,0, 10);
     }
 
     public void changeShip(GameSettings.ChangeData changeData) {
         stats.setHp(this.stats.getHp() * changeData.hp);
         setColor(changeData.color);
         stats.setPointValue(stats.getPointValue() * changeData.multiplier);
+        stats.setExpValue(stats.getExpValue() * changeData.multiplier);
         stats.setCoinValue(stats.getCoinValue() * changeData.multiplier);
     }
 
@@ -64,7 +68,7 @@ public class EnemyShip extends Entity {
         super(-32, 80, 16 * 2, 7 * 2, Color.RED);
         this.spriteType = SpriteType.EnemyShipSpecial;
         this.isDestroyed = false;
-        this.stats = new EnemyShipStats(1, 1, 0, BONUS_TYPE_POINTS, BONUS_TYPE_COINS);
+        this.stats = new EnemyShipStats(1, 1, 0, BONUS_TYPE_POINTS, BONUS_TYPE_COINS, BONUS_TYPE_EXP);
     }
 
     /**
