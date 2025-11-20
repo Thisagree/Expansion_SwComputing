@@ -1,18 +1,17 @@
 package screen;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import engine.Cooldown;
 import engine.Core;
-import entity.Entity;
-import entity.Ship;
+import engine.DrawManager;
+import entity.PlayerShip;
 
 public class ShipSelectionScreen extends Screen {
 
     private static final int SELECTION_TIME = 200;
     private final Cooldown selectionCooldown;
     private int selectedShipIndex = 0; // 0: NORMAL, 1: BIG_SHOT, 2: DOUBLE_SHOT, 3: MOVE_FAST
-    private final Ship[] shipExamples = new Ship[4];
+    private final PlayerShip[] playerShipExamples = new PlayerShip[4];
 
     private boolean backSelected = false; // If current state is on the back button, can't select ship
 
@@ -21,10 +20,10 @@ public class ShipSelectionScreen extends Screen {
         this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
         this.selectionCooldown.reset();
 
-        shipExamples[0] = new Ship(width / 2 - 100, height / 2, Entity.Team.PLAYER, Ship.ShipType.NORMAL, null);
-        shipExamples[1] = new Ship(width / 2 - 35, height / 2, Entity.Team.PLAYER, Ship.ShipType.BIG_SHOT, null);
-        shipExamples[2] = new Ship(width / 2 + 35, height / 2, Entity.Team.PLAYER, Ship.ShipType.DOUBLE_SHOT, null);
-        shipExamples[3] = new Ship(width / 2 + 100, height / 2, Entity.Team.PLAYER, Ship.ShipType.MOVE_FAST, null);
+        playerShipExamples[0] = new PlayerShip(width / 2 - 100, height / 2, DrawManager.SpriteType.Normal, null);
+        playerShipExamples[1] = new PlayerShip(width / 2 - 35, height / 2, DrawManager.SpriteType.BigShot, null);
+        playerShipExamples[2] = new PlayerShip(width / 2 + 35, height / 2, DrawManager.SpriteType.DoubleShot, null);
+        playerShipExamples[3] = new PlayerShip(width / 2 + 100, height / 2, DrawManager.SpriteType.MoveFast, null);
     }
 
     /**
@@ -32,12 +31,12 @@ public class ShipSelectionScreen extends Screen {
      *
      * @return The selected ShipType enum.
      */
-    public Ship.ShipType getSelectedShipType() {
+    public DrawManager.SpriteType getSelectedShipType() {
         return switch (this.selectedShipIndex) {
-            case 1 -> Ship.ShipType.BIG_SHOT;
-            case 2 -> Ship.ShipType.DOUBLE_SHOT;
-            case 3 -> Ship.ShipType.MOVE_FAST;
-            default -> Ship.ShipType.NORMAL;
+            case 1 -> DrawManager.SpriteType.BigShot;
+            case 2 -> DrawManager.SpriteType.DoubleShot;
+            case 3 -> DrawManager.SpriteType.MoveFast;
+            default -> DrawManager.SpriteType.Normal;
         };
     }
 
@@ -93,7 +92,7 @@ public class ShipSelectionScreen extends Screen {
     private void draw() {
         drawManager.initDrawing(this);
 
-        drawManager.drawShipSelectionMenu(this, shipExamples, this.selectedShipIndex);
+        drawManager.drawShipSelectionMenu(this, playerShipExamples, this.selectedShipIndex);
 
         // hover highlight
         int mx = inputManager.getMouseX();

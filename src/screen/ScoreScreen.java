@@ -70,7 +70,7 @@ public class ScoreScreen extends Screen {
         this.gameState = gameState; // Added
 
         this.score = gameState.getScore();
-        this.livesRemaining = gameState.getLives();
+        this.livesRemaining = gameState.getPlayerShip().getStats().getHP();
         this.coins = gameState.getCoins();
         this.name = new StringBuilder();
         this.bulletsShot = gameState.getBulletsShot();
@@ -120,8 +120,8 @@ public class ScoreScreen extends Screen {
 				this.returnCode = 1;
 				this.isRunning = false;
 				if (this.isNewRecord) {
-					saveScore();
 					saveAchievement(); //2025-10-03 call method for save achievement released
+					saveScore();
 				}
 			} else if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
                 // name too short -> return

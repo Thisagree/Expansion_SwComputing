@@ -19,9 +19,10 @@ import java.util.logging.Logger;
 import Animations.BasicGameSpace;
 import Animations.Explosion;
 import Animations.MenuSpace;
+import entity.PlayerShip;
+import engine.augment.Augment;
 import screen.Screen;
 import entity.Entity;
-import entity.Ship;
 import entity.Bullet;
 
 /**
@@ -56,7 +57,7 @@ public final class DrawManager {
     /** Sprite types mapped to their images. */
     private static Map<SpriteType, boolean[][]> spriteMap;
 
-    private final java.util.List<Explosion> explosions = new java.util.ArrayList<>();
+    private final List<Explosion> explosions = new ArrayList<>();
 
     /**
      * Stars background animations for both game and main menu
@@ -73,15 +74,15 @@ public final class DrawManager {
     /** Sprite types. */
     public enum SpriteType {
         /** Player ship. */
-        Ship1,
-        Ship2,
-        Ship3,
-        Ship4,
+        Normal,
+        BigShot,
+        DoubleShot,
+        MoveFast,
         /** Destroyed player ship. */
-        ShipDestroyed1,
-        ShipDestroyed2,
-        ShipDestroyed3,
-        ShipDestroyed4,
+        ShipDestroyedNormal,
+        ShipDestroyedBigShot,
+        ShipDestroyedDoubleShot,
+        ShipDestroyedMoveFast,
         /** Player bullet. */
         Bullet,
         /** Enemy bullet. */
@@ -124,14 +125,14 @@ public final class DrawManager {
         try {
             spriteMap = new LinkedHashMap<>();
 
-            spriteMap.put(SpriteType.Ship1, new boolean[13][8]);
-            spriteMap.put(SpriteType.Ship2, new boolean[13][8]);
-            spriteMap.put(SpriteType.Ship3, new boolean[13][8]);
-            spriteMap.put(SpriteType.Ship4, new boolean[13][8]);
-            spriteMap.put(SpriteType.ShipDestroyed1, new boolean[13][8]);
-            spriteMap.put(SpriteType.ShipDestroyed2, new boolean[13][8]);
-            spriteMap.put(SpriteType.ShipDestroyed3, new boolean[13][8]);
-            spriteMap.put(SpriteType.ShipDestroyed4, new boolean[13][8]);
+            spriteMap.put(SpriteType.Normal, new boolean[13][8]);
+            spriteMap.put(SpriteType.BigShot, new boolean[13][8]);
+            spriteMap.put(SpriteType.DoubleShot, new boolean[13][8]);
+            spriteMap.put(SpriteType.MoveFast, new boolean[13][8]);
+            spriteMap.put(SpriteType.ShipDestroyedNormal, new boolean[13][8]);
+            spriteMap.put(SpriteType.ShipDestroyedBigShot, new boolean[13][8]);
+            spriteMap.put(SpriteType.ShipDestroyedDoubleShot, new boolean[13][8]);
+            spriteMap.put(SpriteType.ShipDestroyedMoveFast, new boolean[13][8]);
             spriteMap.put(SpriteType.Bullet, new boolean[3][5]);
             spriteMap.put(SpriteType.EnemyBullet, new boolean[3][5]);
             spriteMap.put(SpriteType.EnemyShipA1, new boolean[12][8]);
@@ -273,7 +274,7 @@ public final class DrawManager {
         Color color = entity.getColor();
 
         // Color-code by player when applicable
-        if (entity instanceof Ship ship) {
+        if (entity instanceof PlayerShip playerShip) {
             color = Color.BLUE;
             // else leave default (e.g., green) for legacy/unknown
         }
@@ -288,7 +289,7 @@ public final class DrawManager {
           and sets its color alpha to 32 to indicate critical damage.
          */
         if (entity instanceof entity.EnemyShip enemy) {
-            if((enemy.getSpriteType() == SpriteType.EnemyShipA1 || enemy.getSpriteType() == SpriteType.EnemyShipA2) && enemy.getHealth() == 1)
+            if((enemy.getSpriteType() == SpriteType.EnemyShipA1 || enemy.getSpriteType() == SpriteType.EnemyShipA2) && enemy.getStats().getHp() == 1)
                 color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 32);
         }
         return color;
@@ -519,6 +520,22 @@ public final class DrawManager {
         backBufferGraphics.setColor(Color.WHITE);
         String scoreString = String.format("%04d", score);
         backBufferGraphics.drawString(scoreString, screen.getWidth() - 60, 25);
+    }
+
+    /**
+     * Draws current score on screen.
+     *
+     * @param screen
+     *               Screen to draw on.
+     * @param exp
+     *               Current exp.
+     */
+    public void drawExp(final Screen screen, final int exp) {
+        backBufferGraphics.setFont(fontRegular);
+        backBufferGraphics.setColor(Color.decode("#AD19EC"));
+        String scoreString = String.format("%03d", exp);
+        backBufferGraphics.drawString(scoreString, screen.getWidth() - 60, 84);
+        backBufferGraphics.drawString("EXP :            %", screen.getWidth()-115, 84);
     }
 
 	/**
@@ -759,6 +776,77 @@ public final class DrawManager {
         backBufferGraphics.setColor(Color.WHITE);
         drawCenteredRegularString(screen, returnMenu, screen.getHeight()-50);
     }//ADD This Screen
+
+    /**
+     * Draws basic content of Augment select screen.
+     *
+     * @param screen
+     *                     Screen to draw on.
+     * @param augOption
+     *                     Augments to show.
+     *
+     * 2025-11-16 Added in commit : feat : Add augment select system.
+     */
+    public void drawAugmentOverlay(final Screen screen, List<Augment> augOption, int toggle){
+        backBufferGraphics.setColor(new Color(0,0,0,200));
+        backBufferGraphics.fillRect(0, 0, screen.getWidth(), screen.getHeight());
+
+        int height = screen.getHeight()/3;
+        int gap = 100;
+
+        // Show 3 augment options
+        for (int i = 0; i < augOption.size(); i++) {
+            Augment aug = augOption.get(i);
+            backBufferGraphics.setColor(Color.GRAY);
+            if(toggle == i) backBufferGraphics.setColor(Color.GREEN);
+            drawCenteredBigString(screen, aug.name, height + i * gap);
+            drawCenteredRegularString(screen, aug.description, height + i * gap+ 30);
+        }
+    }
+
+    /**
+     * Draw player's level up toast
+     *
+     * @param screen
+     * Screen to draw on.
+     *
+     * 2025-11-16 Added in commit : feat : Add augment select system.
+     */
+    public void drawLevelUpToast(final Screen screen) {
+        Graphics2D g2d = (Graphics2D) backBufferGraphics.create();
+
+        try {
+            int boxWidth = 350;
+            int boxHeight = 110;
+            int x = (screen.getWidth() - boxWidth) / 2;
+            int y = (screen.getHeight() - boxHeight) / 2;
+
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+            g2d.setColor(Color.BLACK);
+            g2d.fillRoundRect(x, y, boxWidth, boxHeight, 15, 15);
+
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
+            g2d.setColor(Color.GREEN);
+            g2d.setStroke(new BasicStroke(2));
+            g2d.drawRoundRect(x, y, boxWidth, boxHeight, 15, 15);
+
+            g2d.setFont(fontRegular);
+            g2d.setColor(Color.YELLOW);
+
+            String msg = "PLAYER LEVEL UP!";
+            FontMetrics fm = g2d.getFontMetrics();
+            int w = fm.stringWidth(msg);
+
+            g2d.drawString(msg, (screen.getWidth() - w) / 2, y + boxHeight/2 + fm.getAscent()/2);
+
+        } finally {
+            g2d.dispose();
+        }
+    }
+
     /**
      * Draws high score screen title and instructions.
      *
@@ -1194,8 +1282,8 @@ public final class DrawManager {
         return centeredStringBounds(screen, items, baselineY);
     }
 
-    public void drawShipSelectionMenu(final Screen screen, final Ship[] shipExamples, final int selectedShipIndex) {
-        Ship ship = shipExamples[selectedShipIndex];
+    public void drawShipSelectionMenu(final Screen screen, final PlayerShip[] playerShipExamples, final int selectedShipIndex) {
+        PlayerShip playerShip = playerShipExamples[selectedShipIndex];
 
         String screenTitle = "PLAYER " + " : CHOOSE YOUR SHIP";
 
@@ -1204,7 +1292,7 @@ public final class DrawManager {
         String[] shipSpeeds = {"SPEED: NORMAL", "SPEED: SLOW", "SPEED: SLOW", "SPEED: FAST"};
         String[] shipFireRates = {"FIRE RATE: NORMAL", "FIRE RATE: NORMAL", "FIRE RATE: NORMAL", "FIRE RATE: SLOW"};
 
-        drawEntity(ship, ship.getPositionX() - ship.getWidth()/2, ship.getPositionY());
+        drawEntity(playerShip, playerShip.getPositionX() - playerShip.getWidth()/2, playerShip.getPositionY());
 //        for (int i = 0; i < 4; i++) {
 //            // Draw Player Ship
 //            drawManager.drawEntity(ship, ship.getPositionX() - ship.getWidth()/2, ship.getPositionY());

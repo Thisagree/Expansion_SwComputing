@@ -8,7 +8,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import entity.Ship;
+import entity.PlayerShip;
 import screen.*;
 
 
@@ -24,10 +24,6 @@ public final class Core {
     private static final int HEIGHT = 520;
     private static final int FPS = 60;
 
-    /** Lives per player (used to compute team pool in shared mode). */
-    private static final int MAX_LIVES = 3;
-    private static final int EXTRA_LIFE_FREQUENCY = 3;
-
     /** Frame to draw the screen on. */
     private static Frame frame;
     private static Screen currentScreen;
@@ -35,6 +31,7 @@ public final class Core {
     private static final Logger LOGGER = Logger.getLogger(Core.class.getSimpleName());
     private static Handler fileHandler;
     private static ConsoleHandler consoleHandler;
+    private PlayerShip playerShip;
     private static int NUM_LEVELS; // Total number of levels
 
     /**
@@ -70,7 +67,7 @@ public final class Core {
         GameState gameState;
         int returnCode = 1;
 
-        Ship.ShipType shipType = Ship.ShipType.NORMAL; // Ship Type
+        DrawManager.SpriteType shipType = DrawManager.SpriteType.Normal; // Ship Type
         do {
             // Game & score.
             AchievementManager achievementManager = new AchievementManager(); // add 1P/2P achievement manager
@@ -90,14 +87,10 @@ public final class Core {
                     break;
 
                 case 2:
-                    gameState = new GameState(1, MAX_LIVES, 0);
+                    gameState = new GameState(shipType, 1, 0);
 
                     do {
-                        // Extra life this level? Give it if team pool is below cap.
-                        boolean bonusLife = gameState.getLevel() % EXTRA_LIFE_FREQUENCY == 0 && gameState.getLives() < MAX_LIVES;
-
-                        currentScreen = new GameScreen(gameState, gameSettings.get(gameState.getLevel() - 1), bonusLife, width, height, FPS, shipType, achievementManager);
-
+                        currentScreen = new GameScreen(gameState, gameSettings.get(gameState.getLevel() - 1), false, width, height, FPS, achievementManager);
                         LOGGER.info("Starting " + WIDTH + "x" + HEIGHT + " game screen at " + FPS + " fps.");
                         returnCode = frame.setScreen(currentScreen);
                         LOGGER.info("Closing game screen.");
@@ -107,17 +100,17 @@ public final class Core {
 
                         gameState = ((GameScreen) currentScreen).getGameState();
 
-                        if (gameState.teamAlive()) {
+                        if (gameState.getPlayerShip().getStats().getHP() > 0) {
                             gameState.nextLevel();
                         }
 
-                    } while (gameState.teamAlive() && gameState.getLevel() <= gameSettings.size());
+                    } while (gameState.getPlayerShip().getStats().getHP() > 0 && gameState.getLevel() <= gameSettings.size());
                     if (returnCode == 1) {
                         break;
                     }
                     LOGGER.info("Starting " + WIDTH + "x" + HEIGHT + " score screen at " + FPS + " fps, with a score of "
                             + gameState.getScore() + ", "
-                            + gameState.getLives() + " lives remaining, "
+                            + gameState.getPlayerShip().getStats().getHP() + " lives remaining, "
                             + gameState.getBulletsShot() + " bullets shot and "
                             + gameState.getShipsDestroyed() + " ships destroyed.");
                     currentScreen = new ScoreScreen(width, height, FPS, gameState, achievementManager);
@@ -159,10 +152,9 @@ public final class Core {
                     break;
 
                 case 6:
-                    // Ship selection for Player 1.
                     currentScreen = new ShipSelectionScreen(width, height, FPS);
                     returnCode = frame.setScreen(currentScreen);
-                    shipType = ((ShipSelectionScreen) currentScreen).getSelectedShipType();
+                    shipType = ((ShipSelectionScreen)currentScreen).getSelectedShipType();
 
                     // If clicked back button, go back to the screen 1P screen -> Player select screen
                     if (returnCode == 5)
