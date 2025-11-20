@@ -91,7 +91,68 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
     private final List<EnemyShip> shooters;
     /** Number of not destroyed ships. */
     private int shipCount;
+    /** Current level (for selecting attack pattern). */
+    private final int level;
 
+    // Pattern state
+    /** Timestamp when patterns are allowed to start (ms). */
+    private long patternStartTime = 0L;
+    /** True after the first pattern has been activated. */
+    private boolean patternActivated = false;
+    /** Currently active attack pattern. */
+    private PatternType currentPattern = PatternType.NONE;
+
+    // Level 1
+    /** Current column index for the wave pattern. */
+    private int waveIndex = 0;
+    /** Frame counter between wave shots. */
+    private int waveFrameCounter = 0;
+    /** Frames between wave shots (lower = faster). */
+    private static final int WAVE_STEP_INTERVAL = 20;
+
+    // Level 2
+    /** Pair index for side wave (left / right column pair). */
+    private int sidewavePairIndex = 0;
+
+    // Level 3
+    /** Frames between shots inside one focus group. */
+    private static final int FOCUS_STEP_INTERVAL = 10;
+    /** Frame counter for the focus pattern. */
+    private int focusFrameCounter = 0;
+    /** 0: left, 1: center, 2: right, -1: idle. */
+    private int focusGroupIndex = -1;
+    /** Index inside the currently selected group. */
+    private int focusStepInGroup = 0;
+    /** How many groups have already attacked (max 10). */
+    private int focusGroupUsed = 0;
+    /** Next time (ms) when a new group may start. */
+    private long focusDelayUntil = 0L;
+
+    // Level 4
+    /** 0: step1 (normal columns), 1: step2 (normal again), 2: step3 (single columns fake) */
+    private int randomBurstPhase = 0;
+    /** How many full sets (0→1→2) have been completed (max 2). */
+    private int randomBurstCycle = 0;
+    /** Extra waits (number of cooldowns) before the next phase. */
+    private int randomBurstWait = 0;
+    /** Select attack pattern by level. */
+    private PatternType selectPatternByLevel(int level) {
+        switch (level) {
+            case 1: return PatternType.WAVE;
+            case 2: return PatternType.SIDEWAVE;
+            case 3: return PatternType.FOCUS;
+            case 4: return PatternType.RANDOMBURST;
+            default: return PatternType.NONE;
+        }
+    }
+    /** Enemy attack pattern types. */
+    private enum PatternType {
+        NONE,
+        WAVE,
+        SIDEWAVE,
+        FOCUS,
+        RANDOMBURST
+    }
     /** Directions the formation can move. */
     private enum Direction {
         /** Movement to the right side of the screen. */
@@ -108,7 +169,8 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
      * @param gameSettings
      *            Current game settings.
      */
-    public EnemyShipFormation(final GameSettings gameSettings) {
+    public EnemyShipFormation(final GameSettings gameSettings, final int level) {
+        this.level = level;
         this.drawManager = Core.getDrawManager();
         this.logger = Core.getLogger();
         this.enemyShips = new ArrayList<List<EnemyShip>>();
@@ -186,6 +248,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
             }
             column.removeAll(destroyed);
         }
+        this.patternStartTime = System.currentTimeMillis();
     }
 
     /**
@@ -300,6 +363,11 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
                     enemyShip.move(movementX, movementY);
                     enemyShip.update();
                 }
+            // Start the special attack pattern once, 7 seconds after the level begins
+            if (!patternActivated && System.currentTimeMillis() - patternStartTime > 7000) {
+                currentPattern = selectPatternByLevel(level);
+                patternActivated = true;
+            }
         }
     }
 
@@ -347,55 +415,327 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
     }
 
     /**
-     * Shoots a bullet downwards.
-     * Fires bullets from C-type and B-type enemies in the formation.
-     * C-type fires double bullets, B-type fires faster bullets.
-     *
-     * @param bullets
-     *            Bullets set to add the bullet being shot.
+     * Shoots from a random enemy ship after cooldown.
+     * Bullet creation handled in spawnBulletFromShooter().
      */
     public final void shoot(final Set<Bullet> bullets) {
         if (this.shooters.isEmpty()) return;
 
-        int index = (int) (Math.random() * this.shooters.size());
-        EnemyShip shooter = this.shooters.get(index);
+        // Level 1/2 patterns: frame-based firing, ignore cooldown
+        if (currentPattern == PatternType.WAVE || currentPattern == PatternType.SIDEWAVE) {
+            waveFrameCounter++;
 
-        if (this.shootingCooldown.checkFinished()) {
-            this.shootingCooldown.reset();
+            if (waveFrameCounter >= WAVE_STEP_INTERVAL) {
+                waveFrameCounter = 0;
 
-            int bulletWidth = 3 * 2;
-            int bulletHeight = 5 * 2;
-            int spawnY = shooter.getPositionY() + shooter.getHeight();
-
-            int bulletSpeed = BULLET_SPEED;
-
-            if (shooter.getSpriteType() == SpriteType.EnemyShipB1
-                    || shooter.getSpriteType() == SpriteType.EnemyShipB2) {
-                bulletSpeed = BULLET_SPEED * 2;
+                if (currentPattern == PatternType.WAVE)
+                    fireWavePattern(bullets);
+                else
+                    fireSideWavePattern(bullets);
             }
+            return;
+        }
+        // Level 3 pattern: fast group-based firing (ends after 10 groups)
+        if (currentPattern == PatternType.FOCUS) {
+            fireFocusPattern(bullets);
+            return;
+        }
+        // Other patterns use normal cooldown
+        if (!this.shootingCooldown.checkFinished())
+            return;
 
-            if (shooter.getSpriteType() == SpriteType.EnemyShipC1 || shooter.getSpriteType() == SpriteType.EnemyShipC2) {
-                int offset = 6;
+        this.shootingCooldown.reset();
 
-                Bullet b1 = BulletPool.getBullet(
-                        shooter.getPositionX() + shooter.getWidth() / 2 - offset,
-                        spawnY, bulletSpeed, bulletWidth, bulletHeight, Entity.Team.ENEMY);
-                bullets.add(b1);
-
-                Bullet b2 = BulletPool.getBullet(
-                        shooter.getPositionX() + shooter.getWidth() / 2 + offset,
-                        spawnY, bulletSpeed, bulletWidth, bulletHeight, Entity.Team.ENEMY);
-                bullets.add(b2);
-
-            } else {
-                Bullet b = BulletPool.getBullet(
-                        shooter.getPositionX() + shooter.getWidth() / 2,
-                        spawnY, bulletSpeed, bulletWidth, bulletHeight, Entity.Team.ENEMY);
-                bullets.add(b);
-            }
+        switch (currentPattern) {
+            case RANDOMBURST:
+                // Level 4 pattern: 3-phase burst + 2 cycles
+                fireRandomBurstPattern(bullets);
+                break;
+            default:
+                // Default random shooter
+                fireNormalRandom(bullets);
+                break;
         }
     }
+    // Pattern functions
+    private void fireNormalRandom(Set<Bullet> bullets) {
+        int index = (int) (Math.random() * this.shooters.size());
+        EnemyShip shooter = this.shooters.get(index);
+        spawnBulletFromShooter(shooter, bullets);
+    }
+    /**
+     * Level 1 : fire one column per step, left → right
+     */
+    private void fireWavePattern(Set<Bullet> bullets) {
+        if (this.shooters.isEmpty()) return;
 
+        // Wave finished one full pass → back to default pattern
+        if (waveIndex >= this.shooters.size()) {
+            currentPattern = PatternType.NONE;
+            waveIndex = 0;
+            waveFrameCounter = 0; // ★ 다음 wave를 위해 초기화
+
+            // Avoid an immediate extra shot right after the wave ends
+            if (this.shootingCooldown != null) {
+                this.shootingCooldown.reset();
+            }
+            return;
+        }
+        EnemyShip shooter = this.shooters.get(waveIndex);
+        spawnBulletFromShooter(shooter, bullets);
+        waveIndex++;
+    }
+    /**
+     * Level 2 : shoot from left/right pairs toward the center
+     */
+    private void fireSideWavePattern(Set<Bullet> bullets) {
+        int n = shooters.size();
+
+        // Finished all pairs → return to default pattern
+        if (sidewavePairIndex >= (n + 1) / 2) {
+            currentPattern = PatternType.NONE;
+            sidewavePairIndex = 0;
+            waveFrameCounter = 0;
+            shootingCooldown.reset();
+            return;
+        }
+
+        int left = sidewavePairIndex;
+        int right = n - 1 - sidewavePairIndex;
+
+        spawnBulletFromShooter(shooters.get(left), bullets);
+
+        if (right != left)
+            spawnBulletFromShooter(shooters.get(right), bullets);
+
+        sidewavePairIndex++;
+    }
+    /**
+     * Level 3 : rapid sequential shots by random left/center/right groups
+     */
+    private void fireFocusPattern(Set<Bullet> bullets) {
+        long now = System.currentTimeMillis();
+
+        // Finished all pairs → back to normal pattern
+        if (focusGroupUsed >= 10) {
+            currentPattern = PatternType.NONE;
+            focusGroupIndex = -1;
+            focusStepInGroup = 0;
+            focusFrameCounter = 0;
+            focusDelayUntil = 0L;
+            if (shootingCooldown != null) shootingCooldown.reset();
+            return;
+        }
+
+        // No active group → try to select a new one
+        if (focusGroupIndex == -1) {
+            if (focusDelayUntil > 0 && now < focusDelayUntil)
+                return;
+
+            // Randomly pick left / center / right, skipping empty groups
+            for (int tries = 0; tries < 3 && focusGroupIndex == -1; tries++) {
+                int candidate = (int) (Math.random() * 3); // 0~2
+                if (!getFocusGroup(candidate).isEmpty()) {
+                    focusGroupIndex = candidate;
+                    focusStepInGroup = 0;
+                    focusFrameCounter = 0;
+                }
+            }
+
+            // All groups are empty → fall back to normal pattern
+            if (focusGroupIndex == -1) {
+                currentPattern = PatternType.NONE;
+                if (shootingCooldown != null) shootingCooldown.reset();
+            }
+            return;
+        }
+
+        // Active group: fire columns in that group with a fast tempo
+        focusFrameCounter++;
+        if (focusFrameCounter < FOCUS_STEP_INTERVAL)
+            return;
+        focusFrameCounter = 0;
+
+        List<EnemyShip> group = getFocusGroup(focusGroupIndex);
+        if (group.isEmpty()) {
+            // Group became empty → count as used and schedule next one
+            focusGroupIndex = -1;
+            focusGroupUsed++;
+            focusDelayUntil = now + 500;
+            return;
+        }
+
+        if (focusStepInGroup >= group.size()) {
+            // Fired all columns in this group → mark as used and move on
+            focusGroupIndex = -1;
+            focusGroupUsed++;
+            focusDelayUntil = now + 500;
+            return;
+        }
+
+        EnemyShip shooter = group.get(focusStepInGroup);
+        if (shooter != null && !shooter.isDestroyed())
+            spawnBulletFromShooter(shooter, bullets);
+
+        focusStepInGroup++;
+    }
+    /**
+     * Return the shooters that belong to the selected focus group.
+     * Groups are divided by X-position into left / center / right.
+     */
+    private List<EnemyShip> getFocusGroup(int group) {
+        List<EnemyShip> result = new ArrayList<>();
+        if (shooters.isEmpty()) return result;
+
+        // Find minX / maxX among existing shooters
+        int minX = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+
+        for (EnemyShip s : shooters) {
+            int x = s.getPositionX();
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+        }
+
+        // Split X-range into 3 groups
+        int range = maxX - minX;
+        int leftMax   = minX + range / 3;
+        int centerMax = minX + (range * 2) / 3;
+
+        // Collect ships based on the selected group
+        for (EnemyShip s : shooters) {
+            int x = s.getPositionX();
+            if (group == 0 && x <= leftMax)
+                result.add(s);
+            else if (group == 1 && x > leftMax && x <= centerMax)
+                result.add(s);
+            else if (group == 2 && x > centerMax)
+                result.add(s);
+        }
+
+        return result;
+    }
+    /**
+     * Level 4: repeated 3-phase burst (0→1→2) done twice.
+     */
+    private void fireRandomBurstPattern(Set<Bullet> bullets) {
+
+        // End pattern after two full cycles
+        if (randomBurstCycle >= 2) {
+            endRandomBurst();
+            return;
+        }
+
+        // Waiting period (cooldown only)
+        if (randomBurstWait > 0) {
+            randomBurstWait--;
+            return;
+        }
+
+        // Classify columns into single / normal
+        List<EnemyShip> singleCols = new ArrayList<>();
+        List<EnemyShip> normalCols = new ArrayList<>();
+
+        for (List<EnemyShip> col : enemyShips) {
+            if (col.isEmpty()) continue;
+            EnemyShip s = col.get(col.size() - 1);
+            if (col.size() == 1) singleCols.add(s);
+            else normalCols.add(s);
+        }
+
+        // Phase processing
+        switch (randomBurstPhase) {
+
+            case 0:
+            case 1:
+                fireColumns(normalCols, bullets);
+
+                if (randomBurstPhase == 0) {
+                    randomBurstPhase = 1;
+                    randomBurstWait = 2;
+                } else {
+                    randomBurstPhase = 2;
+                }
+                break;
+
+            case 2:
+                fireTriple(singleCols, bullets);
+                randomBurstCycle++;
+
+                if (randomBurstCycle >= 2) {
+                    endRandomBurst();
+                } else {
+                    randomBurstPhase = 0;
+                    randomBurstWait = 2;
+                }
+                break;
+        }
+    }
+    /** fall-back to normal random shooting */
+    private void endRandomBurst() {
+        currentPattern = PatternType.NONE;
+        randomBurstPhase = 0;
+        randomBurstCycle = 0;
+        randomBurstWait = 0;
+        if (shootingCooldown != null) shootingCooldown.reset();
+    }
+
+    /** util: fire one bullet from each ship */
+    private void fireColumns(List<EnemyShip> list, Set<Bullet> bullets) {
+        for (EnemyShip s : list)
+            if (s != null && !s.isDestroyed())
+                spawnBulletFromShooter(s, bullets);
+    }
+
+    /** util: fire triple from each ship */
+    private void fireTriple(List<EnemyShip> list, Set<Bullet> bullets) {
+        for (EnemyShip s : list)
+            if (s != null && !s.isDestroyed())
+                for (int i = 0; i < 3; i++)
+                    spawnBulletFromShooter(s, bullets);
+    }
+    /**
+     * Bullet spawn utility.
+     * - Applies A/B/C-type firing rules (single / fast / double shot).
+     * - Computes bullet size, speed, and spawn position.
+     * - Extracted to keep shoot() simple and maintainable.
+     */
+    private void spawnBulletFromShooter(final EnemyShip shooter,
+                                        final Set<Bullet> bullets) {
+
+        int bulletWidth = 3 * 2;
+        int bulletHeight = 5 * 2;
+        int spawnY = shooter.getPositionY() + shooter.getHeight();
+
+        int bulletSpeed = BULLET_SPEED;
+
+        if (shooter.getSpriteType() == SpriteType.EnemyShipB1 ||
+                shooter.getSpriteType() == SpriteType.EnemyShipB2) {
+            bulletSpeed = BULLET_SPEED * 2;
+        }
+
+        if (shooter.getSpriteType() == SpriteType.EnemyShipC1 ||
+                shooter.getSpriteType() == SpriteType.EnemyShipC2) {
+
+            int offset = 6;
+
+            Bullet b1 = BulletPool.getBullet(
+                    shooter.getPositionX() + shooter.getWidth() / 2 - offset,
+                    spawnY, bulletSpeed, bulletWidth, bulletHeight, Entity.Team.ENEMY);
+            bullets.add(b1);
+
+            Bullet b2 = BulletPool.getBullet(
+                    shooter.getPositionX() + shooter.getWidth() / 2 + offset,
+                    spawnY, bulletSpeed, bulletWidth, bulletHeight, Entity.Team.ENEMY);
+            bullets.add(b2);
+
+        } else {
+            Bullet b = BulletPool.getBullet(
+                    shooter.getPositionX() + shooter.getWidth() / 2,
+                    spawnY, bulletSpeed, bulletWidth, bulletHeight, Entity.Team.ENEMY);
+            bullets.add(b);
+        }
+    }
     /**
      * Destroys a ship.
      *

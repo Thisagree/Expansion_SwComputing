@@ -172,7 +172,7 @@ public class GameScreen extends Screen {
         // Start background music for gameplay
         SoundManager.startBackgroundMusic("sound/SpaceInvader-GameTheme.wav");
 
-        enemyShipFormation = new EnemyShipFormation(this.gameSettings);
+        enemyShipFormation = new EnemyShipFormation(this.gameSettings, this.state.getLevel());
         enemyShipFormation.attach(this);
 
         this.enemyShipSpecialCooldown = Core.getVariableCooldown(BONUS_SHIP_INTERVAL, BONUS_SHIP_VARIANCE);
