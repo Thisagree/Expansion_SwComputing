@@ -1393,4 +1393,26 @@ public final class DrawManager {
 
         return new Rectangle(bar_startWidth, y, width, height);
     }
+
+    public void drawHpBar(int x, int y, int width, int height, int currentHp, int maxHp, boolean isEnemy) {
+
+        if (maxHp <= 0) return;
+
+        float ratio = currentHp / (float) maxHp;
+        ratio = Math.max(0f, Math.min(1f, ratio)); // 0~1 사이로 클램프
+
+        backBufferGraphics.setColor(Color.DARK_GRAY);
+        backBufferGraphics.fillRect(x, y, width, height);
+
+        if (isEnemy)
+            backBufferGraphics.setColor(Color.RED);
+        else
+            backBufferGraphics.setColor(Color.GREEN);
+
+        int filledWidth = (int) (width * ratio);
+        backBufferGraphics.fillRect(x, y, filledWidth, height);
+
+        backBufferGraphics.setColor(Color.BLACK);
+        backBufferGraphics.drawRect(x, y, width, height);
+    }
 }

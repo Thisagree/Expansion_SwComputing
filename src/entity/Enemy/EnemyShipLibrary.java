@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class EnemyShipLibrary {
     private final static Map<SpriteType, EnemyShipStats> shipList = new HashMap<>();
-    public EnemyShipLibrary() {
+    static {
         shipList.put(SpriteType.EnemyShipA1,
                 new EnemyShipStats(2, 1, 0, 10, 2, 10));
         shipList.put(SpriteType.EnemyShipA2,

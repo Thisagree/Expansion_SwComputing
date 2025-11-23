@@ -198,6 +198,11 @@ public class PlayerShip extends Entity {
         this.hits++;
     }
 
+    public void resetPosition(int width, int height) {
+        this.positionX = width;
+        this.positionY = height;
+    }
+
     /**
      * TRIPLESHOT effect
      */

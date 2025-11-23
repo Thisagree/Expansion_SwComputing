@@ -1,10 +1,6 @@
 package entity.Enemy;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 import engine.*;
@@ -120,8 +116,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
         this.nShipsWide = gameSettings.getFormationWidth();
         this.nShipsHigh = gameSettings.getFormationHeight();
         this.shootingInterval = gameSettings.getShootingFrequency();
-        this.shootingVariance = (int) (gameSettings.getShootingFrequency()
-                * SHOOTING_VARIANCE);
+        this.shootingVariance = (int) (gameSettings.getShootingFrequency() * SHOOTING_VARIANCE);
         this.baseSpeed = gameSettings.getBaseSpeed();
         this.movementSpeed = this.baseSpeed;
         this.positionX = INIT_POS_X;
@@ -140,8 +135,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
             for (int i = 0; i < this.nShipsHigh; i++) {
                 if (i / (float) this.nShipsHigh < PROPORTION_C)
                     spriteType = SpriteType.EnemyShipC1;
-                else if (i / (float) this.nShipsHigh < PROPORTION_B
-                        + PROPORTION_C)
+                else if (i / (float) this.nShipsHigh < PROPORTION_B + PROPORTION_C)
                     spriteType = SpriteType.EnemyShipB1;
                 else
                     spriteType = SpriteType.EnemyShipA1;
@@ -206,9 +200,12 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
      */
     public final void draw() {
         for (List<EnemyShip> column : this.enemyShips)
-            for (EnemyShip enemyShip : column)
-                drawManager.drawEntity(enemyShip, enemyShip.getPositionX(),
-                        enemyShip.getPositionY());
+            for (EnemyShip enemyShip : column) {
+                drawManager.drawEntity(enemyShip, enemyShip.getPositionX(), enemyShip.getPositionY());
+//                EnemyShipStats stats = enemyShip.getStats();
+//                drawManager.drawHpBar(enemyShip.getPositionX(), enemyShip.getPositionY() + 16, enemyShip.getWidth(), 3,
+//                        stats.getHp(), stats.getHp() - stats.getTotalDamage(),true);
+            }
     }
 
     /**
@@ -216,8 +213,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
      */
     public final void update() {
         if(this.shootingCooldown == null) {
-            this.shootingCooldown = Core.getVariableCooldown(shootingInterval,
-                    shootingVariance);
+            this.shootingCooldown = Core.getVariableCooldown(shootingInterval, shootingVariance);
             this.shootingCooldown.reset();
         }
 
@@ -225,10 +221,8 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
         int movementX = 0;
         int movementY = 0;
-        double remainingProportion = (double) this.shipCount
-                / (this.nShipsHigh * this.nShipsWide);
-        this.movementSpeed = (int) (Math.pow(remainingProportion, 2)
-                * this.baseSpeed);
+        double remainingProportion = (double) this.shipCount / (this.nShipsHigh * this.nShipsWide);
+        this.movementSpeed = (int) (Math.pow(remainingProportion, 2) * this.baseSpeed);
         this.movementSpeed += MINIMUM_SPEED;
 
         movementInterval++;
@@ -286,23 +280,21 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
             // Cleans explosions.
             List<EnemyShip> destroyed;
             for (List<EnemyShip> column : this.enemyShips) {
-                destroyed = new ArrayList<EnemyShip>();
-                for (EnemyShip ship : column) {
-                    if (ship != null && ship.isDestroyed()) {
-                        destroyed.add(ship);
+                destroyed = new ArrayList<>();
+                for (EnemyShip enemyShip : column) {
+                    if (enemyShip != null && enemyShip.isDestroyed()) {
+                        destroyed.add(enemyShip);
                         this.logger.info("Removed enemy "
-                                + column.indexOf(ship) + " from column "
+                                + column.indexOf(enemyShip) + " from column "
                                 + this.enemyShips.indexOf(column));
+                    }
+                    else {
+                        Objects.requireNonNull(enemyShip).move(movementX, movementY);
+                        enemyShip.update();
                     }
                 }
                 column.removeAll(destroyed);
             }
-
-            for (List<EnemyShip> column : this.enemyShips)
-                for (EnemyShip enemyShip : column) {
-                    enemyShip.move(movementX, movementY);
-                    enemyShip.update();
-                }
         }
     }
 
