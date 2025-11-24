@@ -26,9 +26,10 @@ public final class BulletPool {
      *            Requested position of the bullet in the X axis.
      * @param positionY
      *            Requested position of the bullet in the Y axis.
-     * @param speed
-     *            Requested speed of the bullet, positive or negative depending
-     *            on direction - positive is down.
+     * @param speedX
+     *            Requested horizontal speed of the bullet.
+     * @param speedY
+     *            Requested vertical speed of the bullet.
      * @param width
      *            Requested size of the bullet width.
      * @param height
@@ -37,20 +38,29 @@ public final class BulletPool {
      *            Requested team type.
      * @return Requested bullet.
      */
-    public static Bullet getBullet(final int positionX, final int positionY, final int speed, final int width, final int height, final Team team) {
+    public static Bullet getBullet(final int positionX, final int positionY,
+                                   final int speedX, final int speedY,
+                                   final int width, final int height,
+                                   final Team team) {
+
         Bullet bullet;
+
         if (!pool.isEmpty()) {
             bullet = pool.iterator().next();
             pool.remove(bullet);
+
             bullet.setPositionX(positionX - width / 2);
             bullet.setPositionY(positionY);
-            bullet.setSpeed(speed);
+            bullet.setSpeedX(speedX);
+            bullet.setSpeedY(speedY);
+
         } else {
-            bullet = new Bullet(positionX, positionY, width, height, speed);
+            bullet = new Bullet(positionX, positionY, width, height, speedX, speedY);
             bullet.setPositionX(positionX - width / 2);
         }
-        bullet.setSize(width, height);  // bullet size
-        bullet.setTeam(team);	// team setting
+
+        bullet.setSize(width, height);
+        bullet.setTeam(team);
         bullet.setSprite();
         return bullet;
     }

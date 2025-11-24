@@ -382,18 +382,18 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
                 Bullet b1 = BulletPool.getBullet(
                         shooter.getPositionX() + shooter.getWidth() / 2 - offset,
-                        spawnY, bulletSpeed, bulletWidth, bulletHeight, Entity.Team.ENEMY);
+                        spawnY, 0, bulletSpeed, bulletWidth, bulletHeight, Entity.Team.ENEMY);
                 bullets.add(b1);
 
                 Bullet b2 = BulletPool.getBullet(
                         shooter.getPositionX() + shooter.getWidth() / 2 + offset,
-                        spawnY, bulletSpeed, bulletWidth, bulletHeight, Entity.Team.ENEMY);
+                        spawnY, 0, bulletSpeed, bulletWidth, bulletHeight, Entity.Team.ENEMY);
                 bullets.add(b2);
 
             } else {
                 Bullet b = BulletPool.getBullet(
                         shooter.getPositionX() + shooter.getWidth() / 2,
-                        spawnY, bulletSpeed, bulletWidth, bulletHeight, Entity.Team.ENEMY);
+                        spawnY, 0, bulletSpeed, bulletWidth, bulletHeight, Entity.Team.ENEMY);
                 bullets.add(b);
             }
         }

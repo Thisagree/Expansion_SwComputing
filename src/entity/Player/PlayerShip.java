@@ -167,7 +167,7 @@ public class PlayerShip extends Entity {
         int speedMultiplier = getBulletSpeedMultiplier();
         int currentBulletSpeed = this.stats.getBulletSpeed() * speedMultiplier;
 
-        Bullet bullet = BulletPool.getBullet(x, y, currentBulletSpeed, stats.getBulletWidth(), stats.getBulletHeight(), this.getTeam());
+        Bullet bullet = BulletPool.getBullet(x, y,0, currentBulletSpeed, stats.getBulletWidth(), stats.getBulletHeight(), this.getTeam());
         bullets.add(bullet);
     }
 

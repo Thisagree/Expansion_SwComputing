@@ -17,6 +17,9 @@ public class Bullet extends Entity {
      */
     private int speed;
 
+    private int speedX = 0;
+    private int speedY = 0;
+
     /**
      * Constructor, establishes the bullet's properties.
      *
@@ -34,6 +37,14 @@ public class Bullet extends Entity {
         this.speed = speed;
     }
 
+    public Bullet(final int positionX, final int positionY,
+                  final int width, final int height,
+                  final int speedX, final int speedY) {
+        super(positionX, positionY, width, height, Color.WHITE);
+        this.speedX = speedX;
+        this.speedY = speedY;
+    }
+
     // reset the size when recycling bullets
     public final void setSize(final int width, final int height) {
         this.width = width;
@@ -43,8 +54,9 @@ public class Bullet extends Entity {
     /**
      * Sets correct sprite for the bullet, based on speed.
      */
+
     public final void setSprite() {
-        if (this.speed < 0) {
+        if (this.speedY < 0) {
             this.spriteType = SpriteType.Bullet; // player bullet fired, team remains NEUTRAL
         } else {
             this.spriteType = SpriteType.EnemyBullet; // enemy fired bullet
@@ -56,6 +68,8 @@ public class Bullet extends Entity {
      */
     public final void update() {
         this.positionY += this.speed;
+        this.positionX += this.speedX;
+        this.positionY += this.speedY;
     }
 
     /**
@@ -76,4 +90,10 @@ public class Bullet extends Entity {
     public final int getSpeed() {
         return this.speed;
     }
+
+    public void setSpeedX(int sx) { this.speedX = sx; }
+    public void setSpeedY(int sy) { this.speedY = sy; }
+
+    public int getSpeedX() { return speedX; }
+    public int getSpeedY() { return speedY; }
 }
