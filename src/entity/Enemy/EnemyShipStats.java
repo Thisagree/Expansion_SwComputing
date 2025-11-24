@@ -23,7 +23,7 @@ public class EnemyShipStats {
     }
 
     public int getHp() { return HP; };
-    void setHp(int hp) { this.HP = hp; }
+    public void setHp(int hp) { this.HP = hp; }
 
     public int getATK() { return ATK; };
     public void setATK(int atk) { this.ATK = atk; };

@@ -83,7 +83,7 @@ public final class Core {
                     break;
 
                 case 2:
-                    gameState = new GameState(shipType, 1, 0);
+                    gameState = new GameState(shipType, 5, 0);
 
                     do {
                         currentScreen = new GameScreen(gameState, gameSettings.get(gameState.getLevel() - 1), false, width, height, FPS, achievementManager);

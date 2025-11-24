@@ -7,6 +7,7 @@ import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager.SpriteType;
 import screen.Screen;
+import entity.Enemy.*;
 
 /**
  * Boss enemy with multi-phase pattern based on HP.
@@ -34,7 +35,8 @@ public class Boss extends Entity {
                 2,      // Attack
                 0,      // totalDamage
                 500,    // pointValue
-                20      // coinValue
+                20,     // coinValue
+                50      // exp
         );
 
         this.animationCooldown = Core.getCooldown(400);

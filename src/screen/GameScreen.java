@@ -94,6 +94,8 @@ public class GameScreen extends Screen {
     private final GameState state;
     DrawManager.SpriteType shipType;
 
+    private Boss boss;
+
     /** control augment screen and player level up toast screen
      * 2025-11-16 add new variable
      * */
@@ -139,6 +141,14 @@ public class GameScreen extends Screen {
         // for check Achievement 2025-10-02 add
         this.achievementManager = achievementManager;
         this.tookDamageThisLevel = false;
+
+//        try {
+//            List<Score> highScores = Core.getFileManager().loadHighScores();
+//            this.topScore = highScores.isEmpty() ? 0 : highScores.get(0).getScore();
+//        } catch (IOException e) {
+//            logger.warning("Couldn't load high scores for checking!");
+//            this.topScore = 0;
+//        }
         this.highScoreNotified = false;
         this.highScoreNoticeStartTime = 0;
 
@@ -167,8 +177,14 @@ public class GameScreen extends Screen {
         // Start background music for gameplay
         SoundManager.startBackgroundMusic("sound/SpaceInvader-GameTheme.wav");
 
-        enemyShipFormation = new EnemyShipFormation(this.gameSettings);
-        enemyShipFormation.attach(this);
+        if (this.level == 5) {
+            this.boss = new Boss(this.width / 2 - 40, SEPARATION_LINE_HEIGHT + 10);
+            this.enemyShipFormation = null; // No formation on boss level
+        } else {
+            enemyShipFormation = new EnemyShipFormation(this.gameSettings);
+            enemyShipFormation.attach(this);
+            this.boss = null; // Ensure no boss if not level 5
+        }
 
         this.enemyShipSpecialCooldown = Core.getVariableCooldown(BONUS_SHIP_INTERVAL, BONUS_SHIP_VARIANCE);
         this.enemyShipSpecialCooldown.reset();
@@ -179,10 +195,10 @@ public class GameScreen extends Screen {
         // New Item Code
         this.items = new HashSet<Item>();
 
-		// Special input delay / countdown.
-		this.gameStartTime = System.currentTimeMillis();
-		this.inputDelay = Core.getCooldown(INPUT_DELAY);
-		this.inputDelay.reset();
+        // Special input delay / countdown.
+        this.gameStartTime = System.currentTimeMillis();
+        this.inputDelay = Core.getCooldown(INPUT_DELAY);
+        this.inputDelay.reset();
         drawManager.setDeath(false);
 
         this.isPaused = false;
@@ -217,12 +233,16 @@ public class GameScreen extends Screen {
         super.update();
 
         // Countdown beep once during pre-start
-        if (!this.inputDelay.checkFinished() && !countdownSoundPlayed) {
+        if (!this.inputDelay.checkFinished()) {
             long elapsed = System.currentTimeMillis() - this.gameStartTime;
-            if (elapsed > 1750) {
+
+            if (!countdownSoundPlayed && elapsed > 1750) {
                 SoundManager.playOnce("sound/CountDownSound.wav");
                 countdownSoundPlayed = true;
             }
+
+            draw();
+            return;
         }
 
         if (this.inputDelay.checkFinished() && inputManager.isKeyDown(KeyEvent.VK_ESCAPE) && this.pauseCooldown.checkFinished()) {
@@ -273,9 +293,9 @@ public class GameScreen extends Screen {
 
                 boolean isLeftBorder = playerShip.getPositionX() - playerShip.getStats().getMoveSpeed() < 1;
 
-                boolean isUpBorder = playerShip.getPositionY() + playerShip.getHeight() + playerShip.getStats().getMoveSpeed() > this.height - 1;
+                boolean isUpBorder = playerShip.getPositionY() - playerShip.getStats().getMoveSpeed() < SEPARATION_LINE_HEIGHT;
 
-                boolean isDownBorder = playerShip.getPositionY() - playerShip.getStats().getMoveSpeed() < 1;
+                boolean isDownBorder = playerShip.getPositionY() + playerShip.getHeight() + playerShip.getStats().getMoveSpeed() + 15 > this.height;
 
                 if (moveRight && !isRightBorder)
                     playerShip.moveRight();
@@ -314,12 +334,26 @@ public class GameScreen extends Screen {
             // Update ships & enemies
             playerShip.update();
 
-            this.enemyShipFormation.update();
-            int bulletsBefore = this.bullets.size();
-            this.enemyShipFormation.shoot(this.bullets);
-            if (this.bullets.size() > bulletsBefore) {
-                // At least one enemy bullet added
-                SoundManager.playOnce("sound/shoot_enemies.wav");
+            if (this.boss != null && !this.boss.isDestroyed()) {
+
+                int bulletsBefore = this.bullets.size();
+
+                // Boss.update() 안에서 movement + shooting + 패턴 모두 처리됨
+                this.boss.update(this.bullets);
+
+                if (this.bullets.size() > bulletsBefore) {
+                    SoundManager.playOnce("sound/shoot_enemies.wav");
+                }
+            }
+            else if (this.enemyShipFormation != null) {
+
+                this.enemyShipFormation.update();
+                int bulletsBefore = this.bullets.size();
+                this.enemyShipFormation.shoot(this.bullets);
+
+                if (this.bullets.size() > bulletsBefore) {
+                    SoundManager.playOnce("sound/shoot_enemies.wav");
+                }
             }
         }
 
@@ -340,8 +374,16 @@ public class GameScreen extends Screen {
             this.highScoreNotified = true;
             this.highScoreNoticeStartTime = System.currentTimeMillis();
         }
-        // End condition: formation cleared or TEAM lives exhausted.
-        if ((this.enemyShipFormation.isEmpty() || playerShip.getStats().getCurHP() == 0) && !this.levelFinished) {
+        // End condition logic (modified for boss level)
+        boolean allEnemiesDestroyed;
+        if (this.level == 5) {
+            allEnemiesDestroyed = (this.boss != null && this.boss.isDestroyed());
+        } else {
+            allEnemiesDestroyed = (this.enemyShipFormation != null && this.enemyShipFormation.isEmpty());
+        }
+
+        // End condition: formation cleared (or boss destroyed) or TEAM lives exhausted.
+        if ((allEnemiesDestroyed || playerShip.getStats().getCurHP() == 0) && !this.levelFinished) {
             // The object managed by the object pool pattern must be recycled at the end of the level.
             BulletPool.recycle(this.bullets);
             this.bullets.removeAll(this.bullets);
@@ -351,7 +393,7 @@ public class GameScreen extends Screen {
             this.screenFinishedCooldown.reset();
         }
 
-        if (this.levelFinished && this.screenFinishedCooldown.checkFinished() && !this.isAugSelect) {
+        if (this.levelFinished && this.screenFinishedCooldown.checkFinished()) {
             if (!achievementManager.hasPendingToasts()) {
                 this.isRunning = false;
             }
@@ -377,7 +419,13 @@ public class GameScreen extends Screen {
                     this.enemyShipSpecial.getPositionX(),
                     this.enemyShipSpecial.getPositionY());
 
-        enemyShipFormation.draw();
+        if (this.enemyShipFormation != null) {
+            enemyShipFormation.draw();
+        }
+
+        if (this.boss != null)
+            drawManager.drawEntity(this.boss, this.boss.getPositionX(), this.boss.getPositionY());
+
 
         for (Bullet bullet : this.bullets)
             drawManager.drawEntity(bullet, bullet.getPositionX(),
@@ -408,29 +456,37 @@ public class GameScreen extends Screen {
 //            // remove the unnecessary "P1 S: K: B: C:" and "P2 S: K: B: C:" lines from the game screen
 //        }
         drawManager.drawLevel(this, this.state.getLevel());
-		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
-        drawManager.drawShipCount(this, enemyShipFormation.getShipCount());
+        drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
+        if (this.enemyShipFormation != null) {
+            drawManager.drawShipCount(this, enemyShipFormation.getShipCount());
+        }
 
-		if (!this.inputDelay.checkFinished()) {
-			int countdown = (int) ((INPUT_DELAY - (System.currentTimeMillis() - this.gameStartTime)) / 1000);
-			drawManager.drawCountDown(this, this.state.getLevel(), countdown, this.bonusLife);
-			drawManager.drawHorizontalLine(this, this.height / 2 - this.height / 12);
-			drawManager.drawHorizontalLine(this, this.height / 2 + this.height / 12);
-		}
+        if (this.boss != null) {
+            int maxHP = 100; // Boss 클래스에서 설정된 초기 HP 값
+            String bossHP = String.format("Boss HP: %d / %d", this.boss.getStats().getHp(), maxHP);
+            drawManager.drawCenteredRegularString(this, bossHP, SEPARATION_LINE_HEIGHT + 20);
+        }
+
+        if (!this.inputDelay.checkFinished()) {
+            int countdown = (int) ((INPUT_DELAY - (System.currentTimeMillis() - this.gameStartTime)) / 1000);
+            drawManager.drawCountDown(this, this.state.getLevel(), countdown, this.bonusLife);
+            drawManager.drawHorizontalLine(this, this.height / 2 - this.height / 12);
+            drawManager.drawHorizontalLine(this, this.height / 2 + this.height / 12);
+        }
         if (this.highScoreNotified &&
                 System.currentTimeMillis() - this.highScoreNoticeStartTime < HIGH_SCORE_NOTICE_DURATION) {
             drawManager.drawNewHighScoreNotice(this);
         }
 
-		// [ADD] draw achievement popups right before completing the frame
-		drawManager.drawAchievementToasts(
-				this,
-				(this.achievementManager != null)
-						? this.achievementManager.getActiveToasts()
-						: java.util.Collections.emptyList()
-		);
-		if(this.isPaused){
-			drawManager.drawPauseOverlay(this);
+        // [ADD] draw achievement popups right before completing the frame
+        drawManager.drawAchievementToasts(
+                this,
+                (this.achievementManager != null)
+                        ? this.achievementManager.getActiveToasts()
+                        : java.util.Collections.emptyList()
+        );
+        if(this.isPaused){
+            drawManager.drawPauseOverlay(this);
             // pause 화면에서 표시
             drawManager.drawCenteredRegularString(
                     this,
@@ -540,7 +596,7 @@ public class GameScreen extends Screen {
     private void manageCollisions() {
         Set<Bullet> recyclable = new HashSet<Bullet>();
         for (Bullet bullet : this.bullets) {
-            if (bullet.getSpeed() > 0) {
+            if (bullet.getSpeedY() > 0) {
                 // Enemy bullet vs both players
                 if (playerShip != null && !playerShip.isDestroyed() && checkCollision(bullet, playerShip) &&
                         !this.levelFinished) {
@@ -562,10 +618,36 @@ public class GameScreen extends Screen {
                     this.logger.info("Hit on player " + ", team lives now: " + playerShip.getStats().getCurHP());
                     break;
 
-				}
-			} else {
-				// Player bullet vs enemies
-                boolean finalShip = this.enemyShipFormation.lastShip();
+                }
+            } else {
+                // Player bullet vs enemies
+                if (this.boss != null && !this.boss.isDestroyed() && checkCollision(bullet, this.boss)) {
+                    recyclable.add(bullet);
+                    this.boss.hit(1);
+
+                    if (this.boss.isDestroyed()) {
+                        int points = this.boss.getStats().getPointValue();
+                        state.addScore(points);
+                        state.addCoins(this.boss.getStats().getCoinValue());
+
+                        drawManager.triggerExplosion(
+                                this.boss.getPositionX(),
+                                this.boss.getPositionY(),
+                                true,
+                                true
+                        );
+
+                        SoundManager.playOnce("sound/explosion.wav");
+                        this.logger.info("Boss destroyed!");
+
+                    } else {
+                        SoundManager.playOnce("sound/invaderkilled.wav"); // Hit sound for boss
+                    }
+                }
+
+                // 2. Check collision with formation enemies (only on non-boss levels)
+                else if (this.enemyShipFormation != null) {
+                    boolean finalShip = this.enemyShipFormation.lastShip();
 
                 // Check collision with formation enemies
                 for (EnemyShip enemyShip : this.enemyShipFormation) {
@@ -584,18 +666,43 @@ public class GameScreen extends Screen {
                             playerStats.addExp(exp);
                             state.incShipsDestroyed();
 
-                            // obtain drop from ItemManager (may return null)
-                            Item drop = engine.ItemManager.getInstance().obtainDrop(enemyShip);
-                            if (drop != null) {
-                                this.items.add(drop);
-                                this.logger.info("Spawned " + drop.getType() + " at " + drop.getPositionX() + "," + drop.getPositionY());
-                            }
+                                // obtain drop from ItemManager (may return null)
+                                Item drop = engine.ItemManager.getInstance().obtainDrop(enemyShip);
+                                if (drop != null) {
+                                    this.items.add(drop);
+                                    this.logger.info("Spawned " + drop.getType() + " at " + drop.getPositionX() + "," + drop.getPositionY());
+                                }
 
-                            this.enemyShipFormation.destroy(enemyShip);
-                            SoundManager.playOnce("sound/invaderkilled.wav");
-                            this.logger.info("Hit on enemy ship.");
+                                this.enemyShipFormation.destroy(enemyShip);
+                                SoundManager.playOnce("sound/invaderkilled.wav");
+                                this.logger.info("Hit on enemy ship.");
+                            }
+                            break;
                         }
-                        break;
+                    }
+                }
+
+                if (this.boss != null && !this.boss.isDestroyed()) {
+                    if (checkCollision(bullet, this.boss)) {
+                        recyclable.add(bullet);
+                        boss.hit(1);
+
+                        if (boss.isDestroyed()) {
+                            int points = boss.getStats().getPointValue();
+                            state.addScore(points);
+                            state.addCoins(boss.getStats().getCoinValue());
+
+                            drawManager.triggerExplosion(
+                                    boss.getPositionX(),
+                                    boss.getPositionY(),
+                                    true,
+                                    true
+                            );
+
+                            SoundManager.playOnce("sound/explosion.wav");
+
+                            this.boss = null;
+                        }
                     }
                 }
 
@@ -661,7 +768,15 @@ public class GameScreen extends Screen {
             achievementManager.unlock("First Blood");
         }
         // Clear
-        if (levelFinished && this.enemyShipFormation.isEmpty() && state.getLevel()==5) {
+        boolean levelCleared;
+        if (state.getLevel() == 5) {
+            levelCleared = this.levelFinished && (this.boss != null && this.boss.isDestroyed());
+        } else {
+            levelCleared = this.levelFinished && this.enemyShipFormation.isEmpty();
+        }
+
+        // Clear
+        if (levelCleared && state.getLevel()==5) {
             achievementManager.unlock("Clear");
             float Acc = state.getBulletsShot() > 0 ? (float) state.getShipsDestroyed() / state.getBulletsShot()*100 : 0f;
             // Survivor
@@ -685,6 +800,6 @@ public class GameScreen extends Screen {
     private void earlyExitToScore() {
         SoundManager.stopBackgroundMusic();
         // 목숨 0으로
-        while (playerStats.getCurHP() > 0) playerStats.setCurHP(playerStats.getCurHP() - 1);
+        while (playerShip.getStats().getCurHP() > 0) playerShip.getStats().setCurHP(playerShip.getStats().getCurHP() - 1);
     }
 }
