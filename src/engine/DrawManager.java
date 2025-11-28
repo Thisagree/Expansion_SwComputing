@@ -633,7 +633,7 @@ public final class DrawManager {
      *               Option selected.
      */
     public void drawMenu(final Screen screen, final Integer hoverOption, final int selectedIndex) {
-        String[] items = {"Play","upgrade", "Achievements", "High scores","Settings", "Exit"};
+        String[] items = {"Play", "upgrade", "Achievements", "High scores", "Settings", "Exit"};
 
         int baseY = screen.getHeight() / 3 * 2 - 20; // Adjust spacing due to high society button addition
         int spacing = (int) (fontRegularMetrics.getHeight() * 1.5);
