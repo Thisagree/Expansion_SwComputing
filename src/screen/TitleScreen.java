@@ -173,7 +173,7 @@ public class TitleScreen extends Screen {
 
 		Integer newHover = null;
         //2025-11-11 refactoring
-        for(int i=0; i< boxesForHover.length; i++) {
+        for (int i = 0; i < boxesForHover.length; i++) {
             if (boxesForHover[i].contains(mx, my)) {
                 newHover = i;
                 drawManager.menuHover(i);
