@@ -14,6 +14,14 @@ public class StatEffect implements AugmentEffect {
         this.delta = delta;
     }
 
+    /**
+     *  11.28.2025. Added in commit : feat : Add stat Augment effect
+     *  Make stat change to the player
+     *
+     *  @param player
+     *       the player to apply the effect to
+     *
+     * */
     @Override
     public void apply(PlayerShip player) {
         PlayerShipStats stats = player.getStats();

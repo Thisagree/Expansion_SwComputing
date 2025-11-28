@@ -800,8 +800,8 @@ public final class DrawManager {
             Augment aug = augOption.get(i);
             backBufferGraphics.setColor(Color.GRAY);
             if(toggle == i) backBufferGraphics.setColor(Color.GREEN);
-            drawCenteredBigString(screen, aug.name, height + i * gap);
-            drawCenteredRegularString(screen, aug.description, height + i * gap+ 30);
+            drawCenteredBigString(screen, aug.name(), height + i * gap);
+            drawCenteredRegularString(screen, aug.description(), height + i * gap+ 30);
         }
     }
 

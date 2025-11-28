@@ -553,7 +553,7 @@ public class GameScreen extends Screen {
                 Augment selected = augOption.get(augmentIndex);
                 selected.apply(playerShip);
                 augSelected.add(selected);
-                logger.info("Applied augment: " + selected.name);
+                logger.info("Applied augment: " + selected.name());
             }
         }
     }
