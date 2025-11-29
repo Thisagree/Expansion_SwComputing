@@ -94,21 +94,27 @@ public class TitleScreen extends Screen {
                         this.returnCode = 5; // go to PlayScreen
                         this.isRunning = false;
                         break;
+                    //2025-11-11 add upgrade case
 
-                    case 1: // "Achievements"
+                    case 1: // "upgrade
+                        this.returnCode = 7;
+                        this.isRunning = false;
+                        break;
+
+                    case 2: // "Achievements"
                         this.returnCode = 3;
                         this.isRunning = false;
                         break;
-                    case 2: // "High scores"
+                    case 3: // "High scores"
                         this.returnCode = 8;
                         this.isRunning = false;
                         break;
-                    case 3: // "Settings"
+                    case 4: // "Settings"
                         this.returnCode = 4;
                         this.isRunning = false;
                         break;
 
-                    case 4: // "Quit"
+                    case 5: // "Quit"
                         this.returnCode = 0;
                         this.isRunning = false;
                         break;
@@ -122,7 +128,7 @@ public class TitleScreen extends Screen {
                 int temp_y = inputManager.getMouseY();
 
                 java.awt.Rectangle[] boxes = drawManager.getMenuHitboxes(this);
-                int[] pos = {5, 3, 8, 4, 0};
+                int[] pos = {5, 7, 3, 8, 4, 0};
 
                 for (int i = 0; i < boxes.length; i++) {
                     if (boxes[i].contains(temp_x, temp_y)) {
@@ -139,7 +145,7 @@ public class TitleScreen extends Screen {
 	 * Shifts the focus to the next menu item. - modified for 2P mode selection
 	 */
 	private void nextMenuItem() {
-        this.menuIndex = (this.menuIndex + 1) % 5;
+        this.menuIndex = (this.menuIndex + 1) % 6;
         drawManager.menuHover(this.menuIndex);
 	}
 
@@ -147,7 +153,7 @@ public class TitleScreen extends Screen {
 	 * Shifts the focus to the previous menu item.
 	 */
 	private void previousMenuItem() {
-        this.menuIndex = (this.menuIndex + 4) % 5; // Fix : an issue where only the down arrow keys on the keyboard are entered and not up
+        this.menuIndex = (this.menuIndex + 5) % 6; // Fix : an issue where only the down arrow keys on the keyboard are entered and not up
         drawManager.menuHover(this.menuIndex);
     }
 	/**
@@ -166,27 +172,13 @@ public class TitleScreen extends Screen {
 		java.awt.Rectangle[] boxesForHover = drawManager.getMenuHitboxes(this);
 
 		Integer newHover = null;
-		if(boxesForHover[0].contains(mx, my)) {
-            newHover = 0;
-            drawManager.menuHover(0);
+        //2025-11-11 refactoring
+        for (int i = 0; i < boxesForHover.length; i++) {
+            if (boxesForHover[i].contains(mx, my)) {
+                newHover = i;
+                drawManager.menuHover(i);
+            }
         }
-		if(boxesForHover[1].contains(mx, my)){
-            newHover = 1;
-            drawManager.menuHover(1);
-        }
-		if(boxesForHover[2].contains(mx, my)){
-            newHover = 2;
-            drawManager.menuHover(2);
-        }
-        if(boxesForHover[3].contains(mx, my)){
-            newHover = 3;
-            drawManager.menuHover(3);
-        }
-        if(boxesForHover[4].contains(mx, my)){
-            newHover = 4;
-            drawManager.menuHover(4);
-        }
-
         // Modify : Update after hover calculation
         if (newHover != null) {
             // Hover Update + Promote to Select Index when mouse is raised (to keep mouse away)

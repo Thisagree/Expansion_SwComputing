@@ -140,6 +140,16 @@ public final class Core {
                     shipType = ((ShipSelectionScreen)currentScreen).getSelectedShipType();
                     break;
 
+                    //2025-11-11 add upgrade
+                case 7:
+                    //upgrade
+                    currentScreen = new UpgradeScreen(width, height, FPS);
+                    LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+                            + " Upgrade screen at " + FPS + " fps.");
+                    returnCode = frame.setScreen(currentScreen);
+                    LOGGER.info("Closing upgrade screen.");
+                    break;
+
                 case 8:
                     // High scores.
                     currentScreen = new HighScoreScreen(width, height, FPS);

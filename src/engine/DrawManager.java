@@ -428,7 +428,7 @@ public final class DrawManager {
         basicGameSpace.setLastLife(status);
     }
 
-    public void setDeath(boolean status){
+    public void setDeath(boolean status) {
         if(status)
             explosion_size = 20;
         else
@@ -634,7 +634,7 @@ public final class DrawManager {
      *               Option selected.
      */
     public void drawMenu(final Screen screen, final Integer hoverOption, final int selectedIndex) {
-        String[] items = {"Play", "Achievements", "High scores","Settings", "Exit"};
+        String[] items = {"Play", "upgrade", "Achievements", "High scores", "Settings", "Exit"};
 
         int baseY = screen.getHeight() / 3 * 2 - 20; // Adjust spacing due to high society button addition
         int spacing = (int) (fontRegularMetrics.getHeight() * 1.5);
@@ -961,7 +961,26 @@ public final class DrawManager {
         drawBackButton(screen, false);
     }
 
+    /**
+     * Draws Upgrade system.
+     *
+     * @param screen
+     *                   Screen to draw on.
+     * [2025-11-11] complete Upgrade Menu method in DrawManager
+     */
+    public void drawUpgradeMenu(final Screen screen) {
+        String upgradeTitle = "Upgrade Entity";
+        String instructionsString = "Press Back Space to return";
 
+        // Draw the title, achievement name, and description
+        backBufferGraphics.setColor(Color.GREEN);
+        drawCenteredBigString(screen, upgradeTitle, screen.getHeight() / 10);
+        backBufferGraphics.setColor(Color.GRAY);
+        drawCenteredRegularString(screen, instructionsString, (int) (screen.getHeight() * 0.9));
+
+        // Draw back button at the top-left corner
+        drawBackButton(screen, false);
+    }
 
     public void drawSettingMenu(final Screen screen) {
         String settingsString = "Settings";
@@ -1219,7 +1238,7 @@ public final class DrawManager {
             fontRegularMetrics = backBufferGraphics.getFontMetrics(fontRegular);
         }
 
-        final String[] buttons = {"Play", "Achievement", "High scores", "Settings", "Exit"};
+        final String[] buttons = {"Play", "upgrade", "Achievements", "High scores", "Settings", "Exit"};
 
         int baseY = screen.getHeight() / 3 * 2 - 20;
         int spacing = (int) (fontRegularMetrics.getHeight() * 1.5);
