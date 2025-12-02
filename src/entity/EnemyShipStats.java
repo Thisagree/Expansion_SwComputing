@@ -1,4 +1,4 @@
-package entity.Enemy;
+package entity;
 
 public class EnemyShipStats {
     /** Current health of the enemy ship */
@@ -22,17 +22,8 @@ public class EnemyShipStats {
         this.expValue = exp;
     }
 
-    public EnemyShipStats(EnemyShipStats other) {
-        this.HP = other.HP;
-        this.ATK = other.ATK;
-        this.totalDamage = 0;
-        this.pointValue = other.pointValue;
-        this.coinValue = other.coinValue;
-        this.expValue = other.expValue;
-    }
-
     public int getHp() { return HP; };
-    public void setHp(int hp) { this.HP = hp; }
+    void setHp(int hp) { this.HP = hp; }
 
     public int getATK() { return ATK; };
     public void setATK(int atk) { this.ATK = atk; };

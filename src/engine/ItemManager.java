@@ -2,7 +2,7 @@ package engine;
 
 import java.util.Random;
 import java.util.logging.Logger;
-import entity.Enemy.EnemyShip;
+import entity.EnemyShip;
 import entity.Item;
 import entity.ItemPool;
 

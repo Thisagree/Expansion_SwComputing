@@ -182,7 +182,7 @@ public class GameScreen extends Screen {
             this.boss = new Boss(this.width / 2 - 40, SEPARATION_LINE_HEIGHT + 10);
             this.enemyShipFormation = null; // No formation on boss level
         } else {
-            enemyShipFormation = new EnemyShipFormation(this.gameSettings);
+            enemyShipFormation = new EnemyShipFormation(this.gameSettings, this.state.getLevel());
             enemyShipFormation.attach(this);
             this.boss = null; // Ensure no boss if not level 5
         }

@@ -1,4 +1,6 @@
-package entity.Player;
+package entity;
+
+import engine.DrawManager.SpriteType;
 
 
 public class PlayerShipStats {
@@ -6,8 +8,7 @@ public class PlayerShipStats {
     private final int shipWidth;  // 13 * 2
     private final int shipHeight;
     /** Ship properties **/
-    private final int maxHP;
-    private int curHP;
+    private int HP;
     private int ATK;
     private int exp = 0;
     private final int moveSpeed;
@@ -20,8 +21,7 @@ public class PlayerShipStats {
                            int HP, int ATK, int moveSpeed, int bulletSpeed, int shootingInterval, int bulletWidth, int bulletHeight) {
         this.shipWidth = shipWidth;
         this.shipHeight = shipHeight;
-        this.maxHP = HP;
-        this.curHP = HP;
+        this.HP = HP;
         this.ATK = ATK;
         this.moveSpeed = moveSpeed;
         this.bulletSpeed = bulletSpeed;
@@ -33,9 +33,8 @@ public class PlayerShipStats {
     public int getShipWidth() { return shipWidth; }
     public int getShipHeight() { return shipHeight; }
 
-    public int getMaxHP() { return maxHP; }
-    public int getCurHP() { return curHP; }
-    public void setCurHP(int HP) { this.curHP = HP; }
+    public int getHP() { return HP; }
+    public void setHP(int HP) { this.HP = HP; }
     public int getATK() { return ATK; }
     public void setATK(int ATK) { this.ATK = ATK; }
 

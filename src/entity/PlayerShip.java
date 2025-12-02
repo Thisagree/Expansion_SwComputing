@@ -1,4 +1,4 @@
-package entity.Player;
+package entity;
 
 import java.awt.Color;
 import java.util.Set;
@@ -7,9 +7,6 @@ import engine.Cooldown;
 import engine.Core;
 import engine.GameState;
 import engine.DrawManager.SpriteType;
-import entity.Bullet;
-import entity.BulletPool;
-import entity.Entity;
 
 import static engine.ItemEffect.ItemEffectType.*;
 
@@ -167,7 +164,7 @@ public class PlayerShip extends Entity {
         int speedMultiplier = getBulletSpeedMultiplier();
         int currentBulletSpeed = this.stats.getBulletSpeed() * speedMultiplier;
 
-        Bullet bullet = BulletPool.getBullet(x, y,0, currentBulletSpeed, stats.getBulletWidth(), stats.getBulletHeight(), this.getTeam());
+        Bullet bullet = BulletPool.getBullet(x, y, currentBulletSpeed, stats.getBulletWidth(), stats.getBulletHeight(), this.getTeam());
         bullets.add(bullet);
     }
 
@@ -196,11 +193,6 @@ public class PlayerShip extends Entity {
 
     public void addHit(){
         this.hits++;
-    }
-
-    public void resetPosition(int width, int height) {
-        this.positionX = width;
-        this.positionY = height;
     }
 
     /**

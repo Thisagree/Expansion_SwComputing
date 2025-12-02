@@ -1,5 +1,7 @@
 package engine;
 
+import java.util.Arrays;
+
 /**
  * Implements a high score record.
  *
@@ -41,7 +43,7 @@ public class Score implements Comparable<Score> {
         this.name = name;
         this.score = gs.getScore();
         this.levelReached = gs.getLevel();
-        this.livesRemaining = gs.getPlayerShip().getStats().getCurHP();
+        this.livesRemaining = gs.getPlayerShip().getStats().getHP();
         this.playerScores = gs.getScore();
         this.playerBullets = gs.getBulletsShot();
         this.playerKills = gs.getShipsDestroyed();

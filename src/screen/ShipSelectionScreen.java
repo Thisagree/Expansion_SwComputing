@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager;
-import entity.Player.PlayerShip;
+import entity.PlayerShip;
 
 public class ShipSelectionScreen extends Screen {
 
@@ -72,7 +72,7 @@ public class ShipSelectionScreen extends Screen {
                 }
             }
             if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
-                this.returnCode = backSelected ? 1 : 2;
+                this.returnCode = backSelected ? 5 : 6;
                 this.isRunning = false;
             }
             int mx = inputManager.getMouseX();
@@ -82,7 +82,7 @@ public class ShipSelectionScreen extends Screen {
             java.awt.Rectangle backBox = drawManager.getBackButtonHitbox(this);
 
             if (clicked && backBox.contains(mx, my)) {
-                this.returnCode = 1;
+                this.returnCode = 5;
                 this.isRunning = false;
 
             }

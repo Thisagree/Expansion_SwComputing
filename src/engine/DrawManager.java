@@ -19,8 +19,7 @@ import java.util.logging.Logger;
 import Animations.BasicGameSpace;
 import Animations.Explosion;
 import Animations.MenuSpace;
-import entity.Enemy.EnemyShip;
-import entity.Player.PlayerShip;
+import entity.PlayerShip;
 import engine.augment.Augment;
 import screen.Screen;
 import entity.Entity;
@@ -289,7 +288,7 @@ public final class DrawManager {
           Checks if the entity is an EnemyShip of type A (EnemyShipA1 or A2),
           and sets its color alpha to 32 to indicate critical damage.
          */
-        if (entity instanceof EnemyShip enemy) {
+        if (entity instanceof entity.EnemyShip enemy) {
             if((enemy.getSpriteType() == SpriteType.EnemyShipA1 || enemy.getSpriteType() == SpriteType.EnemyShipA2) && enemy.getStats().getHp() == 1)
                 color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 32);
         }
@@ -428,7 +427,7 @@ public final class DrawManager {
         basicGameSpace.setLastLife(status);
     }
 
-    public void setDeath(boolean status) {
+    public void setDeath(boolean status){
         if(status)
             explosion_size = 20;
         else
@@ -634,7 +633,7 @@ public final class DrawManager {
      *               Option selected.
      */
     public void drawMenu(final Screen screen, final Integer hoverOption, final int selectedIndex) {
-        String[] items = {"Play", "upgrade", "Achievements", "High scores", "Settings", "Exit"};
+        String[] items = {"Play", "Achievements", "High scores","Settings", "Exit"};
 
         int baseY = screen.getHeight() / 3 * 2 - 20; // Adjust spacing due to high society button addition
         int spacing = (int) (fontRegularMetrics.getHeight() * 1.5);
@@ -645,69 +644,56 @@ public final class DrawManager {
         }
     }
 
-    /**
-     * Draws game results.
-     *
-     * @param screen Screen to draw on.
-     * @param score Score obtained.
-     * @param coins Coins obtained.
-     * @param livesRemaining Lives remaining.
-     * @param shipsDestroyed Total ships destroyed.
-     * @param clearedStages
-     * @param itemsCollected
-     * @param finalLevel
-     * @param accuracy Total accuracy.
-     * @param isNewRecord If the score is a new high score.
-     * @param accuracy1P If drawing 1P accuracy.
-     */
-    public void drawResults(final Screen screen, final int score,
-                            final int coins, final int livesRemaining,
-                            final int shipsDestroyed,
-                            final int clearedStages,
-                            final int itemsCollected,
-                            final int finalLevel,
-                            final float accuracy, final boolean isNewRecord, final boolean accuracy1P) {
-
-        String scoreString = String.format("score %04d", score);
-        String coinString = String.format("coins %04d", coins);
-        String shipsDestroyedString = "enemies destroyed " + shipsDestroyed;
-        String clearedStagesString = "stages cleared " + clearedStages;
-        String itemsCollectedString = "selected augments " + itemsCollected;
-        String finalLevelString = "final level " + finalLevel;
-
-        String accuracyString = String.format("accuracy %.2f%%", Float.isNaN(accuracy) ? 0.0 : accuracy * 100);
+	/**
+	 * Draws game results.
+	 *
+	 * @param screen
+	 *                       Screen to draw on.
+	 * @param score
+	 *                       Score obtained.
+	 * @param coins
+	 *                       Coins obtained.
+	 * @param shipsDestroyed
+	 *                       Total ships destroyed.
+	 * @param accuracy
+	 *                       Total accuracy.
+	 * @param isNewRecord
+	 *                       If the score is a new high score.
+	 */
+	public void drawResults(final Screen screen, final int score,
+							final int coins, final int livesRemaining , final int shipsDestroyed,
+							final float accuracy, final boolean isNewRecord, final boolean accuracy1P) {
+		String scoreString = String.format("score %04d", score);
+		String coinString = String.format("coins %04d", coins);
+		String livesRemainingString = String.format("lives remaining %d", livesRemaining);
+		String shipsDestroyedString = "enemies destroyed " + shipsDestroyed;
+		String accuracyString = String.format("accuracy %.2f%%", Float.isNaN(accuracy) ? 0.0 : accuracy * 100);
 
         int height = 4;
-        int lineHeight = fontRegularMetrics.getHeight() * 2;
 
-        if (isNewRecord) {
-            backBufferGraphics.setColor(Color.RED);
-        } else {
-            backBufferGraphics.setColor(Color.WHITE);
-        }
+		if (isNewRecord) {
+			backBufferGraphics.setColor(Color.RED);
+		} else {
+			backBufferGraphics.setColor(Color.WHITE);
+		}
 
-        int currentY = screen.getHeight() / height;
-        drawCenteredRegularString(screen, scoreString, currentY);
-        currentY += lineHeight;
-        drawCenteredRegularString(screen, coinString, currentY);
-        currentY += lineHeight;
-        backBufferGraphics.setColor(Color.YELLOW);
-        drawCenteredRegularString(screen, clearedStagesString, currentY);
-        currentY += lineHeight;
-        drawCenteredRegularString(screen, itemsCollectedString, currentY);
-        currentY += lineHeight;
-        drawCenteredRegularString(screen, finalLevelString, currentY);
-        currentY += lineHeight;
-        backBufferGraphics.setColor(Color.WHITE);
-        drawCenteredRegularString(screen, shipsDestroyedString, currentY);
-        currentY += lineHeight;
-
-        if (accuracy1P) {
-            drawCenteredRegularString(screen, accuracyString, currentY);
-            currentY += lineHeight;
-        }
-
-    }
+		drawCenteredRegularString(screen, scoreString, screen.getHeight()
+				/ height);
+		drawCenteredRegularString(screen, coinString,
+				screen.getHeight() / height + fontRegularMetrics.getHeight()
+						* 2);
+		drawCenteredRegularString(screen, livesRemainingString,
+				screen.getHeight() / height + fontRegularMetrics.getHeight()
+						* 4);
+		drawCenteredRegularString(screen, shipsDestroyedString,
+				screen.getHeight() / height + fontRegularMetrics.getHeight()
+						* 6);
+		// Draw accuracy for player in 1P mode
+		if (accuracy1P) {
+			drawCenteredRegularString(screen, accuracyString, screen.getHeight()
+					/ height + fontRegularMetrics.getHeight() * 8);
+		}
+	}
 
 	/**
 	 * Draws interactive characters for name input.
@@ -725,7 +711,7 @@ public final class DrawManager {
 		if (isNewRecord) {
 			backBufferGraphics.setColor(Color.GREEN);
 			drawCenteredRegularString(screen, newRecordString, screen.getHeight()
-					/ 4 + fontRegularMetrics.getHeight() * 14);
+					/ 4 + fontRegularMetrics.getHeight() * 11);
 		}
 
 		// Draw the current name with blinking cursor
@@ -739,7 +725,7 @@ public final class DrawManager {
 
 		backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, displayText,
-				screen.getHeight() / 4 + fontRegularMetrics.getHeight() * 15);
+				screen.getHeight() / 4 + fontRegularMetrics.getHeight() * 12);
 
 	}
 
@@ -748,7 +734,7 @@ public final class DrawManager {
 
 		backBufferGraphics.setColor(Color.YELLOW);
 		drawCenteredRegularString(screen, alert, screen.getHeight()
-				/ 4 + fontRegularMetrics.getHeight() * 16 );
+				/ 4 + fontRegularMetrics.getHeight() * 13 );
 	}
 
     /**
@@ -974,26 +960,7 @@ public final class DrawManager {
         drawBackButton(screen, false);
     }
 
-    /**
-     * Draws Upgrade system.
-     *
-     * @param screen
-     *                   Screen to draw on.
-     * [2025-11-11] complete Upgrade Menu method in DrawManager
-     */
-    public void drawUpgradeMenu(final Screen screen) {
-        String upgradeTitle = "Upgrade Entity";
-        String instructionsString = "Press Back Space to return";
 
-        // Draw the title, achievement name, and description
-        backBufferGraphics.setColor(Color.GREEN);
-        drawCenteredBigString(screen, upgradeTitle, screen.getHeight() / 10);
-        backBufferGraphics.setColor(Color.GRAY);
-        drawCenteredRegularString(screen, instructionsString, (int) (screen.getHeight() * 0.9));
-
-        // Draw back button at the top-left corner
-        drawBackButton(screen, false);
-    }
 
     public void drawSettingMenu(final Screen screen) {
         String settingsString = "Settings";
@@ -1251,7 +1218,7 @@ public final class DrawManager {
             fontRegularMetrics = backBufferGraphics.getFontMetrics(fontRegular);
         }
 
-        final String[] buttons = {"Play", "upgrade", "Achievements", "High scores", "Settings", "Exit"};
+        final String[] buttons = {"Play", "Achievement", "High scores", "Settings", "Exit"};
 
         int baseY = screen.getHeight() / 3 * 2 - 20;
         int spacing = (int) (fontRegularMetrics.getHeight() * 1.5);
@@ -1424,38 +1391,5 @@ public final class DrawManager {
         int height = barThickness * 2;
 
         return new Rectangle(bar_startWidth, y, width, height);
-    }
-
-    /**
-     * Draws a health bar for an entity.
-     *
-     * @param x X coordinate of the bar's top-left corner.
-     * @param y Y coordinate of the bar's top-left corner.
-     * @param width Width of the bar.
-     * @param height Height of the bar.
-     * @param currentHp Current health points.
-     * @param maxHp Maximum health points.
-     * @param isEnemy True if the entity is an enemy (use RED color), false for player (use GREEN).
-     */
-    public void drawHpBar(int x, int y, int width, int height, int currentHp, int maxHp, boolean isEnemy) {
-
-        if (maxHp <= 0) return;
-
-        float ratio = currentHp / (float) maxHp;
-        ratio = Math.max(0f, Math.min(1f, ratio)); // 0~1 사이로 클램프
-
-        backBufferGraphics.setColor(Color.DARK_GRAY);
-        backBufferGraphics.fillRect(x, y, width, height);
-
-        if (isEnemy)
-            backBufferGraphics.setColor(Color.RED);
-        else
-            backBufferGraphics.setColor(Color.GREEN);
-
-        int filledWidth = (int) (width * ratio);
-        backBufferGraphics.fillRect(x, y, filledWidth, height);
-
-        backBufferGraphics.setColor(Color.BLACK);
-        backBufferGraphics.drawRect(x, y, width, height);
     }
 }

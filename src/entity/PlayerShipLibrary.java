@@ -1,4 +1,4 @@
-package entity.Player;
+package entity;
 
 import engine.DrawManager.SpriteType;
 

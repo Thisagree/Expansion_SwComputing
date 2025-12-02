@@ -50,18 +50,18 @@ public class ItemEffect {
      */
     public static void applyHealItem(final GameState gameState, int lifeAmount) {
         if (gameState == null) return;
-        final int beforeLife = gameState.getPlayerShip().getStats().getCurHP();
+        final int beforeLife = gameState.getPlayerShip().getStats().getHP();
 
 
-        if (gameState.getPlayerShip().getStats().getCurHP() + lifeAmount > 3) {
+        if (gameState.getPlayerShip().getStats().getHP() + lifeAmount > 3) {
             // if adding life exceeds max, add score and coin instead
             gameState.addScore(lifeAmount * 20);
             gameState.addCoins(lifeAmount * 20);
         }
         else
-            gameState.getPlayerShip().getStats().setCurHP(gameState.getPlayerShip().getStats().getCurHP() + lifeAmount);
+            gameState.getPlayerShip().getStats().setHP(gameState.getPlayerShip().getStats().getHP() + lifeAmount);
 
-        logger.info("Player added " + lifeAmount + " lives. before : " + beforeLife + ", after : " + gameState.getPlayerShip().getStats().getCurHP());
+        logger.info("Player added " + lifeAmount + " lives. before : " + beforeLife + ", after : " + gameState.getPlayerShip().getStats().getHP());
     }
 
     /**

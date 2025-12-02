@@ -34,9 +34,6 @@ public class ScoreScreen extends Screen {
     private final int bulletsShot;
     /** Total ships destroyed by the player. */
     private final int shipsDestroyed;
-    private final int clearedStages;
-    private final int finalLevel;
-    private final int itemsCollected;
     /** List of past high scores. */
     private List<Score> highScores;
     /** Checks if current score is a new high score. */
@@ -73,15 +70,12 @@ public class ScoreScreen extends Screen {
         this.gameState = gameState; // Added
 
         this.score = gameState.getScore();
-        this.livesRemaining = gameState.getPlayerShip().getStats().getCurHP();
+        this.livesRemaining = gameState.getPlayerShip().getStats().getHP();
         this.coins = gameState.getCoins();
         this.name = new StringBuilder();
         this.bulletsShot = gameState.getBulletsShot();
         this.shipsDestroyed = gameState.getShipsDestroyed();
         this.totalCoin = gameState.getCoins(); // ADD THIS LINE
-        this.finalLevel = gameState.getLevel();
-        this.clearedStages = gameState.getLevel() - 1;
-        this.itemsCollected = gameState.getItemsCollected();
         this.isNewRecord = false;
         this.name = new StringBuilder();
         this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
@@ -228,17 +222,7 @@ public class ScoreScreen extends Screen {
 
         float accuracy = (this.bulletsShot > 0) ? (float) this.shipsDestroyed / this.bulletsShot : 0f;
         float acc = (this.bulletsShot > 0) ? (float) this.shipsDestroyed / this.bulletsShot : 0f;
-        drawManager.drawResults(this,
-                this.score,
-                this.coins,
-                this.livesRemaining,
-                this.shipsDestroyed,
-                this.clearedStages,
-                this.itemsCollected,
-                this.finalLevel,
-                acc,
-                this.isNewRecord,
-                true);
+        drawManager.drawResults(this, this.score, this.coins, this.livesRemaining, this.shipsDestroyed, acc, this.isNewRecord, true); // Draw accuracy for 1P mode
 
 		drawManager.drawNameInput(this, this.name, this.isNewRecord);
 		if (showNameError)

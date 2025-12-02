@@ -25,7 +25,7 @@ public class PlayScreen extends Screen {
 
     public PlayScreen(final int width, final int height, final int fps) {
         super(width, height, fps);
-        this.returnCode = 2;
+        this.returnCode = 2; // default 1P
         this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
         this.selectionCooldown.reset();
     }
@@ -49,6 +49,19 @@ public class PlayScreen extends Screen {
                 this.selectionCooldown.reset();
             }
 
+            // back button click event & 1P, 2P button click event
+            if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
+                switch (this.menuIndex) {
+                    case 0: // "1 Player"
+                        this.returnCode = 2; // go to GameScreen
+                        break;
+
+                    case 1: // "Back"
+                        this.returnCode = 1; // go back to TitleScreen
+                        break;
+                }
+                this.isRunning = false;
+            }
             if (inputManager.isMouseClicked()) {
                 int mx = inputManager.getMouseX();
                 int my = inputManager.getMouseY();
@@ -94,3 +107,5 @@ public class PlayScreen extends Screen {
     }
 
 }
+
+
