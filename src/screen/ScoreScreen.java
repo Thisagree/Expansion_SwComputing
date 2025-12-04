@@ -118,6 +118,7 @@ public class ScoreScreen extends Screen {
                 // Return to main menu.
                 SoundManager.playOnce("sound/select.wav");
 				this.returnCode = 1;
+                ShipUpgradeManager.getInstance().addCoins(this.gameState.getCoins());
 				this.isRunning = false;
 				if (this.isNewRecord) {
 					saveAchievement(); //2025-10-03 call method for save achievement released
@@ -129,6 +130,7 @@ public class ScoreScreen extends Screen {
 				// Play again.
                 SoundManager.playOnce("sound/select.wav");
 				this.returnCode = 2;
+                ShipUpgradeManager.getInstance().addCoins((this.gameState.getCoins()));
 				this.isRunning = false;
 				if (this.isNewRecord) {
 					saveScore();
