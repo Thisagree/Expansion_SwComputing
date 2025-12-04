@@ -97,7 +97,7 @@ public class TitleScreen extends Screen {
                     //2025-11-11 add upgrade case
 
                     case 1: // "upgrade
-                        this.returnCode = 7;
+                        this.returnCode = 9;
                         this.isRunning = false;
                         break;
 
@@ -128,7 +128,7 @@ public class TitleScreen extends Screen {
                 int temp_y = inputManager.getMouseY();
 
                 java.awt.Rectangle[] boxes = drawManager.getMenuHitboxes(this);
-                int[] pos = {5, 7 ,3, 8, 4, 0};
+                int[] pos = {5, 9 ,3, 8, 4, 0};
 
                 for (int i = 0; i < boxes.length; i++) {
                     if (boxes[i].contains(temp_x, temp_y)) {
