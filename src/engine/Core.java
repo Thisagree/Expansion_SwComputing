@@ -169,7 +169,7 @@ public final class Core {
                     //upgrade
                     currentScreen = new UpgradeScreen(width, height, FPS);
                     LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-                            + " Upgrae screen at " + FPS + " fps.");
+                            + " Upgrade screen at " + FPS + " fps.");
                     returnCode = frame.setScreen(currentScreen);
                     LOGGER.info("Closing upgrade screen.");
                     break;

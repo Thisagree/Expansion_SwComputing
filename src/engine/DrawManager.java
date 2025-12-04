@@ -1278,7 +1278,7 @@ public final class DrawManager {
             fontRegularMetrics = backBufferGraphics.getFontMetrics(fontRegular);
         }
 
-        final String[] buttons = {"Play","upgrade","Achievement", "High scores", "Settings", "Exit"};
+        final String[] buttons = {"Play", "upgrade", "Achievements", "High scores", "Settings", "Exit"};
 
         int baseY = screen.getHeight() / 3 * 2 - 20;
         int spacing = (int) (fontRegularMetrics.getHeight() * 1.5);
