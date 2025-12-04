@@ -21,7 +21,7 @@ This update enhances the game’s **strategic depth and immersion** by diversify
 
 ## 2. Develop Game Over (Results) Screen UI
 
-- Improved the end screen to display the following information:
+- Improved the end main.screen to display the following information:
     - Selected **Augments**
     - **Enemies Defeated**
     - **Coins Earned**
