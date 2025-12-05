@@ -128,7 +128,7 @@ public class TitleScreen extends Screen {
                 int temp_y = inputManager.getMouseY();
 
                 java.awt.Rectangle[] boxes = drawManager.getMenuHitboxes(this);
-                int[] pos = {2, 7 ,3, 8, 4, 0};
+                int[] pos = {6, 7, 3, 8, 4, 0};
 
                 for (int i = 0; i < boxes.length; i++) {
                     if (boxes[i].contains(temp_x, temp_y)) {
