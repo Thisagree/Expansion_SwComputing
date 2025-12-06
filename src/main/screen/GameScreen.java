@@ -174,8 +174,10 @@ public class GameScreen extends Screen {
     public final void initialize() {
         super.initialize();
 
-        playerStats.setCurHP(playerStats.getMaxHP());
-        drawManager.setDeath(false);
+        if(playerStats.getCurHP() == 0){
+            playerStats.setCurHP(playerStats.getMaxHP());
+            drawManager.setDeath(false);
+        }
 
         state.clearAllEffects();
         playerShip.resetPosition(this.getWidth() / 2, this.getHeight() /10 * 9);
