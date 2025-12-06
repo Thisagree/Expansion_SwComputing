@@ -61,9 +61,10 @@ This update enhances the game’s **strategic depth and immersion** by diversify
 
 - Defeating enemies during battle grants **Coins**.
 - Players can use Coins to upgrade the following stats of their spaceship:
+    - **ATTACK**
     - **Fire Rate**
     - **Move Speed**
-    - **HP**
+    - **MAX_HP**
 - Upgrades can be applied between stages or through a dedicated upgrade menu.
 
 ---
