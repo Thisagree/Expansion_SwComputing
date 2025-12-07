@@ -1,4 +1,4 @@
-package main.engine.ShipUpgradeManagerTest;
+package test.main.engine.ShipUpgradeManagerTest;
 
 import main.engine.DrawManager.SpriteType;
 import main.engine.ShipUpgradeManager;
