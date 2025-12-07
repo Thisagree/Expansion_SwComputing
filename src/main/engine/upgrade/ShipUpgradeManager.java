@@ -1,5 +1,6 @@
-package main.engine;
+package main.engine.upgrade;
 
+import main.engine.Core;
 import main.engine.DrawManager.SpriteType;
 import main.entity.Player.PlayerShipLibrary;
 import main.entity.Player.PlayerShipStats;
@@ -158,7 +159,7 @@ public class ShipUpgradeManager {
 
     /**
      * Calculates the cost to upgrade from the current level to the next level.
-     * Formula: 50 + (currentLevel - 1) * 25
+     * Formula: 100 * currentLevel
      * Returns 0 if at MAX_LEVEL.
      */
     public int getUpgradeCost(SpriteType type, ShipUpgradeType upgradeType) {
@@ -166,7 +167,7 @@ public class ShipUpgradeManager {
         if (currentLevel >= MAX_LEVEL) {
             return 0;
         }
-        return 50 + (currentLevel - 1) * 25;
+        return 100 * currentLevel;
     }
 
     /**
@@ -272,7 +273,7 @@ public class ShipUpgradeManager {
     private int totalCostForLevel(int level) {
         int total = 0;
         for (int current = MIN_LEVEL; current < level; current++) {
-            total += 50 + (current - 1) * 25;
+            total += current * 100;
         }
         return total;
     }
@@ -290,9 +291,9 @@ public class ShipUpgradeManager {
     /**
      * Applies upgrade levels for ONE specific ship to PlayerShipLibrary.
      * Stat adjustments:
-     * - ATTACK: +1 per level
-     * - MOVE_SPEED: +1 per level
-     * - FIRE_RATE: shooting interval -50 per level (minimum 200)
+     * - ATTACK: +0.3 per level
+     * - MOVE_SPEED: +0.5 per level
+     * - FIRE_RATE: shooting interval -25 per level (minimum 200)
      * - MAX_HP: +1 per level
      */
     private void applyUpgradesToLibrary(SpriteType type) {
@@ -310,9 +311,9 @@ public class ShipUpgradeManager {
         int rateLevel = levels.get(ShipUpgradeType.FIRE_RATE);
         int hpLevel = levels.get(ShipUpgradeType.MAX_HP);
 
-        float attack = base.getATK() + (attackLevel - 1);
-        float moveSpeed = base.getMoveSpeed() + (moveLevel - 1);
-        int shootingInterval = Math.max(200, base.getShootingInterval() - 50 * (rateLevel - 1));
+        float attack = base.getATK() + 0.3f * (attackLevel - 1);
+        float moveSpeed = base.getMoveSpeed() + 0.5f * (moveLevel - 1);
+        int shootingInterval = Math.max(200, base.getShootingInterval() - 25 * (rateLevel - 1));
         int maxHp = base.getMaxHP() + (hpLevel - 1);
 
         PlayerShipStats upgraded = new PlayerShipStats(

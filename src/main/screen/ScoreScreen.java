@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.*;
 
 import main.engine.*;
-import main.engine.ShipUpgradeManager;
+import main.engine.upgrade.ShipUpgradeManager;
 
 /**
  * Implements the score screen.

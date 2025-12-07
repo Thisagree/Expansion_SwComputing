@@ -17,6 +17,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Logger;
 import main.engine.DrawManager.SpriteType;
+import main.engine.upgrade.ShipUpgradeData;
+import main.engine.upgrade.ShipUpgradeType;
 
 /**
  * Manages files used in the application.

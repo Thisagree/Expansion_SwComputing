@@ -1,8 +1,8 @@
 package test.main.engine.ShipUpgradeManagerTest;
 
 import main.engine.DrawManager.SpriteType;
-import main.engine.ShipUpgradeManager;
-import main.engine.ShipUpgradeType;
+import main.engine.upgrade.ShipUpgradeManager;
+import main.engine.upgrade.ShipUpgradeType;
 import main.entity.Player.PlayerShipLibrary;
 import main.entity.Player.PlayerShipStats;
 import org.junit.jupiter.api.*;

@@ -1,4 +1,4 @@
-package main.engine;
+package main.engine.upgrade;
 
 /**
  * Types of player ship upgrades.

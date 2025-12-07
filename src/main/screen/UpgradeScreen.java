@@ -2,8 +2,8 @@ package main.screen;
 
 import main.engine.Cooldown;
 import main.engine.Core;
-import main.engine.ShipUpgradeManager;
-import main.engine.ShipUpgradeType;
+import main.engine.upgrade.ShipUpgradeManager;
+import main.engine.upgrade.ShipUpgradeType;
 import main.engine.SoundManager;
 import main.engine.DrawManager.SpriteType;
 
