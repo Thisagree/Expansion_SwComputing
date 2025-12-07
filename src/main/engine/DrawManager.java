@@ -291,7 +291,7 @@ public final class DrawManager {
           and sets its color alpha to 32 to indicate critical damage.
          */
         if (entity instanceof EnemyShip enemy) {
-            if((enemy.getSpriteType() == SpriteType.EnemyShipA1 || enemy.getSpriteType() == SpriteType.EnemyShipA2) && enemy.getStats().getHp() == 1)
+            if((enemy.getSpriteType() == SpriteType.EnemyShipA1 || enemy.getSpriteType() == SpriteType.EnemyShipA2) && enemy.getStats().getHp() == 1f)
                 color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 32);
         }
         return color;
@@ -1008,9 +1008,9 @@ public final class DrawManager {
                 }
 
                 case 1 -> drawStatLine(screen, y, labels[i], levels.getOrDefault(ShipUpgradeType.ATTACK, 1),
-                        stats.getATK(), upgradeManager.getUpgradeCost(currentType, ShipUpgradeType.ATTACK));
+                        Math.round(stats.getATK()), upgradeManager.getUpgradeCost(currentType, ShipUpgradeType.ATTACK));
                 case 2 -> drawStatLine(screen, y, labels[i], levels.getOrDefault(ShipUpgradeType.MOVE_SPEED, 1),
-                        stats.getMoveSpeed(), upgradeManager.getUpgradeCost(currentType, ShipUpgradeType.MOVE_SPEED));
+                        Math.round(stats.getMoveSpeed()), upgradeManager.getUpgradeCost(currentType, ShipUpgradeType.MOVE_SPEED));
                 case 3 -> drawStatLine(screen, y, labels[i], levels.getOrDefault(ShipUpgradeType.FIRE_RATE, 1),
                         Math.max(1, 1000 / stats.getShootingInterval()), upgradeManager.getUpgradeCost(currentType, ShipUpgradeType.FIRE_RATE), "shot/s");
                 case 4 -> drawStatLine(screen, y, labels[i], levels.getOrDefault(ShipUpgradeType.MAX_HP, 1),

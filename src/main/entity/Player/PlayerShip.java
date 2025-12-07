@@ -69,14 +69,15 @@ public class PlayerShip extends Entity {
     /**
      * Moves the ship speed uni ts right, or until the right main.screen border is reached.
      */
-    public final void moveRight() { this.positionX += stats.getMoveSpeed(); }
+    public final void moveRight() { this.positionX += Math.round(stats.getMoveSpeed()); }
 
     /**
      * Moves the ship speed units left, or until the left main.screen border is reached.
      */
-    public final void moveLeft() { this.positionX -= stats.getMoveSpeed(); }
-    public final void moveUp() { this.positionY -= stats.getMoveSpeed(); }
-    public final void moveDown() { this.positionY += stats.getMoveSpeed(); }
+    public final void moveLeft() { this.positionX -= Math.round(stats.getMoveSpeed()); }
+    public final void moveUp() { this.positionY -= Math.round(stats.getMoveSpeed()); }
+    public final void moveDown() { this.positionY += Math.round(stats.getMoveSpeed()); }
+
 
     /**
      * Shoots a bullet based on ship type and active effects.
@@ -166,7 +167,8 @@ public class PlayerShip extends Entity {
      */
     private void addBullet(final Set<Bullet> bullets, final int x, final int y) {
         int speedMultiplier = getBulletSpeedMultiplier();
-        int currentBulletSpeed = this.stats.getBulletSpeed() * speedMultiplier;
+        int currentBulletSpeed = Math.round(this.stats.getBulletSpeed() * speedMultiplier);
+
 
         Bullet bullet = BulletPool.getBullet(x, y,0, currentBulletSpeed, stats.getBulletWidth(),
                 stats.getBulletHeight(), this.getTeam());

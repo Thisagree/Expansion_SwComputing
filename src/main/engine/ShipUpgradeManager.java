@@ -310,8 +310,8 @@ public class ShipUpgradeManager {
         int rateLevel = levels.get(ShipUpgradeType.FIRE_RATE);
         int hpLevel = levels.get(ShipUpgradeType.MAX_HP);
 
-        int attack = base.getATK() + (attackLevel - 1);
-        int moveSpeed = base.getMoveSpeed() + (moveLevel - 1);
+        float attack = base.getATK() + (attackLevel - 1);
+        float moveSpeed = base.getMoveSpeed() + (moveLevel - 1);
         int shootingInterval = Math.max(200, base.getShootingInterval() - 50 * (rateLevel - 1));
         int maxHp = base.getMaxHP() + (hpLevel - 1);
 

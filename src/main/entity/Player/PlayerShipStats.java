@@ -8,16 +8,16 @@ public class PlayerShipStats {
     /** Ship properties **/
     private final int maxHP;
     private int curHP;
-    private int ATK;
+    private float ATK;
     private int exp = 0;
-    private int moveSpeed;
-    private int bulletSpeed;
+    private float moveSpeed;
+    private float bulletSpeed;
     private int shootingInterval;
     private final int bulletWidth;
     private final int bulletHeight;
 
     public PlayerShipStats(int shipWidth, int shipHeight,
-                           int HP, int ATK, int moveSpeed, int bulletSpeed, int shootingInterval, int bulletWidth, int bulletHeight) {
+                           int HP, float ATK, float moveSpeed, float bulletSpeed, int shootingInterval, int bulletWidth, int bulletHeight) {
         this.shipWidth = shipWidth;
         this.shipHeight = shipHeight;
         this.maxHP = HP;
@@ -37,14 +37,14 @@ public class PlayerShipStats {
     public int getCurHP() { return curHP; }
     public void setCurHP(int HP) { this.curHP = HP; }
 
-    public int getATK() { return ATK; }
-    public void setATK(int ATK) { this.ATK = ATK; }
+    public float getATK() { return ATK; }
+    public void setATK(float ATK) { this.ATK = ATK; }
 
-    public int getMoveSpeed() { return moveSpeed; }
-    public void addSpeed(int delta) { moveSpeed += delta; }
+    public float getMoveSpeed() { return moveSpeed; }
+    public void addSpeed(float delta) { moveSpeed += delta; }
 
-    public int getBulletSpeed() { return bulletSpeed; }
-    public void addBulletSpeed(int delta) { this.bulletSpeed += delta; }
+    public float getBulletSpeed() { return bulletSpeed; }
+    public void addBulletSpeed(float delta) { this.bulletSpeed += delta; }
 
     public int getShootingInterval() { return this.shootingInterval; }
     public void addShootingInterval(int delta) { this.shootingInterval += delta; }

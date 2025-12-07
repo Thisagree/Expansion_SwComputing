@@ -1,5 +1,6 @@
-package main.entity.Enemy;
+package test.main.entity.Enemy;
 
+import main.entity.Enemy.EnemyShipStats;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,9 +8,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class EnemyShipStatsTest {
     @Test
     void testConstructorAndGetters() {
-        EnemyShipStats stats = new EnemyShipStats(100, 20, 5, 10, 15, 50);
+        EnemyShipStats stats = new EnemyShipStats(100f, 20, 5, 10, 15, 50);
 
-        assertEquals(100, stats.getHp());
+        assertEquals(100f, stats.getHp());
         assertEquals(20, stats.getATK());
         assertEquals(5f, stats.getTotalDamage());
         assertEquals(10, stats.getPointValue());
@@ -19,7 +20,7 @@ class EnemyShipStatsTest {
 
     @Test
     void testCopyConstructor() {
-        EnemyShipStats original = new EnemyShipStats(100, 20, 7, 10, 15, 50);
+        EnemyShipStats original = new EnemyShipStats(100f, 20, 7, 10, 15, 50);
         EnemyShipStats copy = new EnemyShipStats(original);
 
         assertEquals(original.getHp(), copy.getHp());
@@ -32,16 +33,16 @@ class EnemyShipStatsTest {
 
     @Test
     void testSetters() {
-        EnemyShipStats stats = new EnemyShipStats(100, 20, 0, 10, 15, 50);
+        EnemyShipStats stats = new EnemyShipStats(100f, 20, 0, 10, 15, 50);
 
-        stats.setHp(120);
+        stats.setHp(120f);
         stats.setATK(30);
         stats.setTotalDamage(12.5f);
         stats.setPointValue(40);
         stats.setCoinValue(60);
         stats.setExpValue(99);
 
-        assertEquals(120, stats.getHp());
+        assertEquals(120f, stats.getHp());
         assertEquals(30, stats.getATK());
         assertEquals(12.5f, stats.getTotalDamage());
         assertEquals(40, stats.getPointValue());

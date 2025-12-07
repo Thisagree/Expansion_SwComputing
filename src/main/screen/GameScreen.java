@@ -295,13 +295,14 @@ public class GameScreen extends Screen {
                 moveLeft = inputManager.isP1LeftPressed();
                 moveUp = inputManager.isP1UpPressed();
                 moveDown = inputManager.isP1DownPressed();
-                boolean isRightBorder = playerShip.getPositionX() + playerShip.getWidth() + playerShip.getStats().getMoveSpeed() > this.width - 1;
+                int roundedMoveSpeed = Math.round(playerShip.getStats().getMoveSpeed());
+                boolean isRightBorder = playerShip.getPositionX() + playerShip.getWidth() + roundedMoveSpeed > this.width - 1;
 
-                boolean isLeftBorder = playerShip.getPositionX() - playerShip.getStats().getMoveSpeed() < 1;
+                boolean isLeftBorder = playerShip.getPositionX() - roundedMoveSpeed < 1;
 
-                boolean isUpBorder = playerShip.getPositionY() - playerShip.getStats().getMoveSpeed() < SEPARATION_LINE_HEIGHT;
+                boolean isUpBorder = playerShip.getPositionY() - roundedMoveSpeed < SEPARATION_LINE_HEIGHT;
 
-                boolean isDownBorder = playerShip.getPositionY() + playerShip.getHeight() + playerShip.getStats().getMoveSpeed() + 15 > this.height;
+                boolean isDownBorder = playerShip.getPositionY() + playerShip.getHeight() + roundedMoveSpeed + 15 > this.height;
 
                 if (moveRight && !isRightBorder)
                     playerShip.moveRight();
@@ -444,7 +445,7 @@ public class GameScreen extends Screen {
                 if (enemyShip.isDestroyed()) continue;
                 EnemyShipStats stats = enemyShip.getStats();
                 drawManager.drawHpBar(enemyShip.getPositionX(),enemyShip.getPositionY() + 16,enemyShip.getWidth(),3,
-                        stats.getHp() - stats.getTotalDamage(),stats.getHp(),true);
+                        stats.getHp() - stats.getTotalDamage(),Math.round(stats.getHp()),true);
             }
         }
 
@@ -470,8 +471,8 @@ public class GameScreen extends Screen {
         }
 
         if (this.boss != null) {
-            int maxHP = 100; // Boss 클래스에서 설정된 초기 HP 값
-            String bossHP = String.format("Boss HP: %d / %d", this.boss.getStats().getHp(), maxHP);
+            float maxHP = 100; // Boss 클래스에서 설정된 초기 HP 값
+            String bossHP = String.format("Boss HP: %.0f / %.0f", this.boss.getStats().getHp(), maxHP);
             drawManager.drawCenteredRegularString(this, bossHP, SEPARATION_LINE_HEIGHT + 20);
         }
 

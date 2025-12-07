@@ -1,5 +1,6 @@
-package main.entity.Player;
+package test.main.entity.Player;
 
+import main.entity.Player.PlayerShipStats;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,8 +11,8 @@ class PlayerShipStatsTest {
     void testConstructorAndGetters() {
         PlayerShipStats stats = new PlayerShipStats(
                 26, 40,
-                100, 20,
-                5, 10, 300,
+                100, 20f,
+                5f, 10f, 300,
                 4, 8
         );
 
@@ -19,9 +20,9 @@ class PlayerShipStatsTest {
         assertEquals(40, stats.getShipHeight());
         assertEquals(100, stats.getMaxHP());
         assertEquals(100, stats.getCurHP());
-        assertEquals(20, stats.getATK());
-        assertEquals(5, stats.getMoveSpeed());
-        assertEquals(10, stats.getBulletSpeed());
+        assertEquals(20f, stats.getATK());
+        assertEquals(5f, stats.getMoveSpeed());
+        assertEquals(10f, stats.getBulletSpeed());
         assertEquals(300, stats.getShootingInterval());
         assertEquals(4, stats.getBulletWidth());
         assertEquals(8, stats.getBulletHeight());
@@ -32,21 +33,21 @@ class PlayerShipStatsTest {
     void testSettersAndAdders() {
         PlayerShipStats stats = new PlayerShipStats(
                 10, 20,
-                50, 5,
-                3, 7, 200,
+                50, 5f,
+                3f, 7f, 200,
                 2, 3
         );
 
         stats.setCurHP(40);
-        stats.setATK(12);
-        stats.addSpeed(2);
-        stats.addBulletSpeed(3);
+        stats.setATK(12f);
+        stats.addSpeed(2f);
+        stats.addBulletSpeed(3f);
         stats.addShootingInterval(-50);
 
         assertEquals(40, stats.getCurHP());
-        assertEquals(12, stats.getATK());
-        assertEquals(5, stats.getMoveSpeed());
-        assertEquals(10, stats.getBulletSpeed());
+        assertEquals(12f, stats.getATK());
+        assertEquals(5f, stats.getMoveSpeed());
+        assertEquals(10f, stats.getBulletSpeed());
         assertEquals(150, stats.getShootingInterval());
     }
 
@@ -54,8 +55,8 @@ class PlayerShipStatsTest {
     void testExpSystem() {
         PlayerShipStats stats = new PlayerShipStats(
                 10, 20,
-                50, 5,
-                3, 7, 200,
+                50, 5f,
+                3f, 7f, 200,
                 2, 3
         );
 
