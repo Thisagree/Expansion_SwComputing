@@ -78,4 +78,12 @@ class StatEffectTest {
                 "When result <= 50, it should only reduce by 50");
     }
 
+    @Test
+    void nullStatTypeShouldThrow() {
+        assertThrows(NullPointerException.class, () -> {
+            StatEffect effect = new StatEffect(null, 5);
+            effect.apply(player);
+        });
+    }
+
 }
