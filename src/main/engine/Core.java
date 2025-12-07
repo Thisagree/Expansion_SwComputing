@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 import main.entity.Player.PlayerShip;
 import main.screen.*;
-import main.engine.ShipUpgradeManager;
 
 /**
  * Implements core game logic.

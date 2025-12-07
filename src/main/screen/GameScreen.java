@@ -11,6 +11,7 @@ import main.engine.*;
 import main.engine.SoundManager;
 import main.engine.augment.Augment;
 import main.engine.augment.AugmentLibrary;
+import main.engine.ItemManager;
 import main.entity.*;
 import main.entity.Enemy.EnemyShip;
 import main.entity.Enemy.EnemyShipFormation;
@@ -680,7 +681,7 @@ public class GameScreen extends Screen {
                             state.incShipsDestroyed();
 
                                 // obtain drop from ItemManager (may return null)
-                                Item drop = main.engine.ItemManager.getInstance().obtainDrop(enemyShip);
+                                Item drop = ItemManager.getInstance().obtainDrop(enemyShip);
                                 if (drop != null) {
                                     this.items.add(drop);
                                     this.logger.info("Spawned " + drop.getType() + " at " + drop.getPositionX() + "," + drop.getPositionY());
