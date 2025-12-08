@@ -85,7 +85,6 @@ public class GameScreen extends Screen {
 
     private boolean isPaused;
     private Cooldown pauseCooldown;
-    private Cooldown returnMenuCooldown;
 
     /** checks if player took damage
      * 2025-10-02 add new variable
@@ -211,7 +210,6 @@ public class GameScreen extends Screen {
 
         this.isPaused = false;
         this.pauseCooldown = Core.getCooldown(300);
-        this.returnMenuCooldown = Core.getCooldown(300);
 
         augmentCooldown = Core.getCooldown(300);  // 0.2초 디바운스
         augmentCooldown.reset();
@@ -265,12 +263,7 @@ public class GameScreen extends Screen {
                 SoundManager.startBackgroundMusic("sound/SpaceInvader-GameTheme.wav");
             }
         }
-        if (this.isPaused && inputManager.isKeyDown(KeyEvent.VK_BACK_SPACE) && this.returnMenuCooldown.checkFinished()) {
-            SoundManager.playOnce("sound/select.wav");
-            SoundManager.stopAllMusic(); // Stop all music before returning to menu
-            returnCode = 1;
-            this.isRunning = false;
-        }
+
         // Pause 상태에서 Enter → 즉시 종료하고 점수 화면으로
         if (this.isPaused && inputManager.isKeyDown(KeyEvent.VK_ENTER)) {
             earlyExitToScore();
@@ -698,30 +691,6 @@ public class GameScreen extends Screen {
                                 this.logger.info("Hit on enemy ship.");
                             }
                             break;
-                        }
-                    }
-                }
-
-                if (this.boss != null && !this.boss.isDestroyed()) {
-                    if (checkCollision(bullet, this.boss)) {
-                        recyclable.add(bullet);
-                        boss.hit(playerStats.getATK());
-
-                        if (boss.isDestroyed()) {
-                            int points = boss.getStats().getPointValue();
-                            state.addScore(points);
-                            state.addCoins(boss.getStats().getCoinValue());
-
-                            drawManager.triggerExplosion(
-                                    boss.getPositionX(),
-                                    boss.getPositionY(),
-                                    true,
-                                    true
-                            );
-
-                            SoundManager.playOnce("sound/explosion.wav");
-
-                            this.boss = null;
                         }
                     }
                 }

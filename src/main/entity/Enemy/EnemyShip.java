@@ -48,10 +48,11 @@ public class EnemyShip extends Entity {
         this.animationCooldown = Core.getCooldown(500);
         this.isDestroyed = false;
         EnemyShipStats template = EnemyShipLibrary.getShipList().get(this.spriteType);
-        if(this.stats == null)
-            this.stats = new EnemyShipStats(3,0,0,10,1, 10);
-        else
+        if (template != null) {
             this.stats = new EnemyShipStats(template);
+        } else {
+            this.stats = new EnemyShipStats(3, 0, 0, 10, 1, 10);
+        }
     }
 
     public void changeShip(GameSettings.ChangeData changeData) {

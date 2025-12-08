@@ -788,10 +788,6 @@ public final class DrawManager {
         backBufferGraphics.setColor(Color.WHITE);
         drawCenteredBigString(screen, pauseString, screen.getHeight()/2);
 
-        String returnMenu = "PRESS BACKSPACE TO RETURN TO TITLE";
-        backBufferGraphics.setFont(fontRegular);
-        backBufferGraphics.setColor(Color.WHITE);
-        drawCenteredRegularString(screen, returnMenu, screen.getHeight()-50);
     }//ADD This Screen
 
     /**

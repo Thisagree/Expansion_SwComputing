@@ -188,13 +188,14 @@ public class Boss extends Entity {
      * ------------------------------- */
 
     public void hit(float damage) {
-        stats.setHp(stats.getHp() - damage);
+        float updatedHp = Math.max(0, stats.getHp() - damage);
+        stats.setHp(updatedHp);
         stats.setTotalDamage(stats.getTotalDamage() + damage);
 
-        if (stats.getHp() <= 0) {
+        if (updatedHp <= 0) {
             destroy();
         } else {
-            float ratio = (float)stats.getHp() / 100f;
+            float ratio = updatedHp / 100f;
             this.setColor(new Color((int)(255 * ratio), 60, 60));
         }
     }
