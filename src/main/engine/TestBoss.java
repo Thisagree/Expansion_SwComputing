@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import main.engine.DrawManager.SpriteType;
 import main.engine.upgrade.ShipUpgradeManager;
 import main.screen.GameScreen;
+import main.screen.ScoreScreen;
 
 /**
  * Entry point for quickly starting a boss battle using the Normal ship with
@@ -44,6 +45,7 @@ public final class TestBoss {
         int bossLevelIndex = Math.min(4, gameSettings.size() - 1); // Level 5 settings or fallback to last
         GameSettings bossSettings = gameSettings.get(bossLevelIndex);
 
+        AchievementManager achievementManager = new AchievementManager();
         GameState gameState = new GameState(SpriteType.Normal, 5, 0);
         GameScreen gameScreen = new GameScreen(
                 gameState,
@@ -52,10 +54,20 @@ public final class TestBoss {
                 frame.getWidth(),
                 frame.getHeight(),
                 FPS,
-                new AchievementManager());
+                achievementManager);
 
         LOGGER.info("Launching boss battle test.");
         frame.setScreen(gameScreen);
+
+
+        ScoreScreen scoreScreen = new ScoreScreen(
+                frame.getWidth(),
+                frame.getHeight(),
+                FPS,
+                gameScreen.getGameState(),
+                achievementManager);
+        LOGGER.info("Launching score screen after boss battle.");
+        frame.setScreen(scoreScreen);
 
         closeLogger();
         System.exit(0);
