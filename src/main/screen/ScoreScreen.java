@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.*;
 
 import main.engine.*;
-import main.engine.ShipUpgradeManager;
+import main.engine.upgrade.ShipUpgradeManager;
 
 /**
  * Implements the score screen.
@@ -50,8 +50,7 @@ public class ScoreScreen extends Screen {
     private final Cooldown selectionCooldown;
     /** manages achievements.*/
     private final AchievementManager achievementManager;
-    /** Total coins earned in the game. */
-    private final int totalCoin;
+
 
     /**
      * Constructor, establishes the properties of the screen.
@@ -79,7 +78,6 @@ public class ScoreScreen extends Screen {
         this.name = new StringBuilder();
         this.bulletsShot = gameState.getBulletsShot();
         this.shipsDestroyed = gameState.getShipsDestroyed();
-        this.totalCoin = gameState.getCoins(); // ADD THIS LINE
         this.finalLevel = gameState.getLevel();
         this.clearedStages = gameState.getLevel() - 1;
         this.itemsCollected = gameState.getItemsCollected();
@@ -229,7 +227,6 @@ public class ScoreScreen extends Screen {
 
         drawManager.drawGameOver(this, this.inputDelay.checkFinished());
 
-        float accuracy = (this.bulletsShot > 0) ? (float) this.shipsDestroyed / this.bulletsShot : 0f;
         float acc = (this.bulletsShot > 0) ? (float) this.shipsDestroyed / this.bulletsShot : 0f;
         drawManager.drawResults(this,
                 this.score,
@@ -248,9 +245,5 @@ public class ScoreScreen extends Screen {
             drawManager.drawNameInputError(this);
 
         drawManager.completeDrawing(this);
-    }
-
-    public int getTotalCoin() {
-        return totalCoin;
     }
 }

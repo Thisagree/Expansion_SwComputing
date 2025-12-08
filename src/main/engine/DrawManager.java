@@ -19,6 +19,8 @@ import java.util.logging.Logger;
 import main.Animations.BasicGameSpace;
 import main.Animations.Explosion;
 import main.Animations.MenuSpace;
+import main.engine.upgrade.ShipUpgradeManager;
+import main.engine.upgrade.ShipUpgradeType;
 import main.entity.Enemy.EnemyShip;
 import main.entity.Player.PlayerShip;
 import main.entity.Player.PlayerShipStats;
@@ -291,7 +293,7 @@ public final class DrawManager {
           and sets its color alpha to 32 to indicate critical damage.
          */
         if (entity instanceof EnemyShip enemy) {
-            if((enemy.getSpriteType() == SpriteType.EnemyShipA1 || enemy.getSpriteType() == SpriteType.EnemyShipA2) && enemy.getStats().getHp() == 1)
+            if((enemy.getSpriteType() == SpriteType.EnemyShipA1 || enemy.getSpriteType() == SpriteType.EnemyShipA2) && enemy.getStats().getHp() == 1f)
                 color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 32);
         }
         return color;
@@ -1028,14 +1030,16 @@ public final class DrawManager {
     }
 
     private void drawStatLine(final Screen screen, final int y, final String label, final int level,
-                              final int value, final int cost) {
+                              final float value, final int cost) {
         drawStatLine(screen, y, label, level, value, cost, "");
     }
 
     private void drawStatLine(final Screen screen, final int y, final String label, final int level,
-                              final int value, final int cost, final String suffix) {
+                              final float value, final int cost, final String suffix) {
         String costText = cost == 0 ? "MAX" : cost + " c";
-        String line = String.format("%s Lv.%d | %d%s | Cost: %s", label, level, value, suffix.isEmpty() ? "" : " " + suffix, costText);
+        String valueText = Math.abs(value - Math.rint(value)) < 0.0001 ? String.format("%d", Math.round(value))
+                : String.format("%.1f", value);
+        String line = String.format("%s Lv.%d | %s%s | Cost: %s", label, level, valueText, suffix.isEmpty() ? "" : " " + suffix, costText);
         drawCenteredRegularString(screen, line, y);
     }
 

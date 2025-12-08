@@ -2,7 +2,7 @@ package main.entity.Enemy;
 
 public class EnemyShipStats {
     /** Current health of the enemy ship */
-    private int HP;
+    private float HP;
     /** Attack point of enemy ship */
     private int ATK;
     private float totalDamage = 0;
@@ -13,7 +13,7 @@ public class EnemyShipStats {
     /** Values of the ship, in EXP, when destroyed. */
     private int expValue;
 
-    public EnemyShipStats(int HP, int ATK, int totalDamage, int pointValue, int coinValue, int exp) {
+    public EnemyShipStats(float HP, int ATK, int totalDamage, int pointValue, int coinValue, int exp) {
         this.HP = HP;
         this.ATK = ATK;
         this.totalDamage = totalDamage;
@@ -31,8 +31,8 @@ public class EnemyShipStats {
         this.expValue = other.expValue;
     }
 
-    public int getHp() { return HP; };
-    public void setHp(int hp) { this.HP = hp; }
+    public float getHp() { return HP; };
+    public void setHp(float hp) { this.HP = hp; }
 
     public int getATK() { return ATK; };
     public void setATK(int atk) { this.ATK = atk; };

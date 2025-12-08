@@ -1,30 +1,101 @@
-[INFO|3:30:16]: Started loading resources. 
-[FINE|3:30:16]: Sprite Normal loaded. 
-[FINE|3:30:16]: Sprite BigShot loaded. 
-[FINE|3:30:16]: Sprite DoubleShot loaded. 
-[FINE|3:30:16]: Sprite MoveFast loaded. 
-[FINE|3:30:16]: Sprite ShipDestroyedNormal loaded. 
-[FINE|3:30:16]: Sprite ShipDestroyedBigShot loaded. 
-[FINE|3:30:16]: Sprite ShipDestroyedDoubleShot loaded. 
-[FINE|3:30:16]: Sprite ShipDestroyedMoveFast loaded. 
-[FINE|3:30:16]: Sprite Bullet loaded. 
-[FINE|3:30:16]: Sprite EnemyBullet loaded. 
-[FINE|3:30:16]: Sprite EnemyShipA1 loaded. 
-[FINE|3:30:16]: Sprite EnemyShipA2 loaded. 
-[FINE|3:30:16]: Sprite EnemyShipB1 loaded. 
-[FINE|3:30:16]: Sprite EnemyShipB2 loaded. 
-[FINE|3:30:16]: Sprite EnemyShipC1 loaded. 
-[FINE|3:30:16]: Sprite EnemyShipC2 loaded. 
-[FINE|3:30:16]: Sprite EnemyShipSpecial loaded. 
-[FINE|3:30:16]: Sprite Explosion loaded. 
-[FINE|3:30:16]: Sprite Heart loaded. 
-[FINE|3:30:16]: Sprite ItemScore loaded. 
-[FINE|3:30:16]: Sprite ItemCoin loaded. 
-[FINE|3:30:16]: Sprite ItemHeal loaded. 
-[FINE|3:30:16]: Sprite ItemTripleShot loaded. 
-[FINE|3:30:16]: Sprite ItemScoreBooster loaded. 
-[FINE|3:30:16]: Sprite ItemBulletSpeedUp loaded. 
-[INFO|3:30:16]: Finished loading the sprites. 
-[INFO|3:30:16]: Finished loading the fonts. 
-[FINE|3:30:17]: Started looped sound: sound/menu_sound.wav 
-[INFO|3:30:17]: Starting 448x520 title screen at 60 fps. 
+[INFO|2:19:15]: Started loading resources. 
+[FINE|2:19:15]: Sprite Normal loaded. 
+[FINE|2:19:15]: Sprite BigShot loaded. 
+[FINE|2:19:15]: Sprite DoubleShot loaded. 
+[FINE|2:19:15]: Sprite MoveFast loaded. 
+[FINE|2:19:15]: Sprite ShipDestroyedNormal loaded. 
+[FINE|2:19:15]: Sprite ShipDestroyedBigShot loaded. 
+[FINE|2:19:15]: Sprite ShipDestroyedDoubleShot loaded. 
+[FINE|2:19:15]: Sprite ShipDestroyedMoveFast loaded. 
+[FINE|2:19:15]: Sprite Bullet loaded. 
+[FINE|2:19:15]: Sprite EnemyBullet loaded. 
+[FINE|2:19:15]: Sprite EnemyShipA1 loaded. 
+[FINE|2:19:15]: Sprite EnemyShipA2 loaded. 
+[FINE|2:19:15]: Sprite EnemyShipB1 loaded. 
+[FINE|2:19:15]: Sprite EnemyShipB2 loaded. 
+[FINE|2:19:15]: Sprite EnemyShipC1 loaded. 
+[FINE|2:19:15]: Sprite EnemyShipC2 loaded. 
+[FINE|2:19:15]: Sprite EnemyShipSpecial loaded. 
+[FINE|2:19:15]: Sprite Explosion loaded. 
+[FINE|2:19:15]: Sprite Heart loaded. 
+[FINE|2:19:15]: Sprite ItemScore loaded. 
+[FINE|2:19:15]: Sprite ItemCoin loaded. 
+[FINE|2:19:15]: Sprite ItemHeal loaded. 
+[FINE|2:19:15]: Sprite ItemTripleShot loaded. 
+[FINE|2:19:15]: Sprite ItemScoreBooster loaded. 
+[FINE|2:19:15]: Sprite ItemBulletSpeedUp loaded. 
+[INFO|2:19:15]: Finished loading the sprites. 
+[INFO|2:19:15]: Finished loading the fonts. 
+[FINE|2:19:15]: Started looped sound: sound/menu_sound.wav 
+[INFO|2:19:15]: Starting 448x520 title screen at 60 fps. 
+[INFO|2:19:16]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:16]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:16]: Closing title screen. 
+[INFO|2:19:16]: Starting 448x520 Upgrade screen at 60 fps. 
+[INFO|2:19:17]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:18]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:19]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:19]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:19]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:19]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:20]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:20]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:20]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:21]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:21]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:21]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:22]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:22]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:22]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:22]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:23]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:23]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:23]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:24]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:24]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:24]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:24]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:25]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:25]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:25]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:25]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:26]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:26]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:26]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:27]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:28]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:28]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:28]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:29]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:29]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:30]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:30]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:30]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:31]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:31]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:31]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:31]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:32]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:32]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:32]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:32]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:32]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:33]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:33]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:33]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:33]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:33]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:34]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:34]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:34]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:34]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:35]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:35]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:35]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:36]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:36]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:36]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:36]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:37]: Started one-shot sound: sound/hover.wav 
+[INFO|2:19:37]: Started one-shot sound: sound/select.wav 
+[INFO|2:19:37]: Started one-shot sound: sound/select.wav 

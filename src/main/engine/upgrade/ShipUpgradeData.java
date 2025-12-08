@@ -1,4 +1,4 @@
-package main.engine;
+package main.engine.upgrade;
 
 import main.engine.DrawManager.SpriteType;
 import java.util.EnumMap;

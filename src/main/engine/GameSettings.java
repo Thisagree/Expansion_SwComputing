@@ -32,20 +32,20 @@ public class GameSettings {
 		public int x, y;
 
 		//적 체력
-		public int hp;
+		public float hp;
 		//적 색상
 		public Color color = null;
 
 		//보상 배율
 		public int multiplier;
 
-		public ChangeData(int x, int y, int hp, int multiplier) {
+		public ChangeData(int x, int y, float hp, int multiplier) {
 			this.x = x; this.y = y;
 			this.hp = hp;
 			this.multiplier = multiplier;
 		}
 
-		public ChangeData(int x, int y, int hp, int multiplier, Color color) {
+		public ChangeData(int x, int y, float hp, int multiplier, Color color) {
 			this.x = x; this.y = y;
 			this.hp = hp;
 			this.multiplier = multiplier;
@@ -106,7 +106,7 @@ public class GameSettings {
 				String[] parts = lines.get(i).split(",");
 				int x = Integer.parseInt(parts[0].trim());
 				int y = Integer.parseInt(parts[1].trim());
-				int z = Integer.parseInt(parts[2].trim());
+				float z = Float.parseFloat(parts[2].trim());
 				int w = Integer.parseInt(parts[3].trim());
 				Color color = null;
 				if(parts.length >= 5) {

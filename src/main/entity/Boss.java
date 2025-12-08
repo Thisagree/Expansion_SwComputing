@@ -31,7 +31,7 @@ public class Boss extends Entity {
         this.spriteType = SpriteType.EnemyShipSpecial;
 
         this.stats = new EnemyShipStats(
-                100,    // HP
+                100f,    // HP
                 2,      // Attack
                 0,      // totalDamage
                 500,    // pointValue
@@ -46,7 +46,7 @@ public class Boss extends Entity {
     /** Update boss based on HP phases */
     public void update(Set<Bullet> bullets) {
 
-        int hp = stats.getHp();
+        float hp = stats.getHp();
 
         if (hp > 60) {
             // PHASE 1: Linear movement + straight shot
@@ -187,7 +187,7 @@ public class Boss extends Entity {
      * Hit & Destroy
      * ------------------------------- */
 
-    public void hit(int damage) {
+    public void hit(float damage) {
         stats.setHp(stats.getHp() - damage);
         stats.setTotalDamage(stats.getTotalDamage() + damage);
 

@@ -34,7 +34,7 @@ class StatEffectTest {
 
     @Test
     void moveSpeedIncrease() {
-        int originalSpeed = stats.getMoveSpeed();
+        float originalSpeed = stats.getMoveSpeed();
 
         StatEffect effect = new StatEffect(StatEffect.StatType.SPEED, 1);
         effect.apply(player);
@@ -45,7 +45,7 @@ class StatEffectTest {
 
     @Test
     void bulletSpeedDecrease() {
-        int originalBulletSpeed = stats.getBulletSpeed();
+        float originalBulletSpeed = stats.getBulletSpeed();
 
         StatEffect effect = new StatEffect(StatEffect.StatType.BULLET_SPEED, 3);
         effect.apply(player);
@@ -76,6 +76,14 @@ class StatEffectTest {
 
         assertEquals(50, stats.getShootingInterval(),
                 "When result <= 50, it should only reduce by 50");
+    }
+
+    @Test
+    void nullStatTypeShouldThrow() {
+        assertThrows(NullPointerException.class, () -> {
+            StatEffect effect = new StatEffect(null, 5);
+            effect.apply(player);
+        });
     }
 
 }

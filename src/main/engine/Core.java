@@ -8,9 +8,9 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import main.engine.upgrade.ShipUpgradeManager;
 import main.entity.Player.PlayerShip;
 import main.screen.*;
-import main.engine.ShipUpgradeManager;
 
 /**
  * Implements core game logic.
