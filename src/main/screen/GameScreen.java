@@ -174,9 +174,9 @@ public class GameScreen extends Screen {
     public final void initialize() {
         super.initialize();
 
-        if(playerStats.getCurHP() == 0){
-            playerStats.setCurHP(playerStats.getMaxHP());
-            drawManager.setDeath(false);
+        if(playerStats.getCurHP() <= 0){
+            playerStats.resetShipStat();
+            augSelected.clear();
         }
 
         state.clearAllEffects();

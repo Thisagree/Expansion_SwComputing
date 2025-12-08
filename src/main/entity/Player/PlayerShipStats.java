@@ -6,7 +6,6 @@ public class PlayerShipStats {
     private final int shipWidth;  // 13 * 2
     private final int shipHeight;
     /** Ship properties **/
-    private final int maxHP;
     private int curHP;
     private float ATK;
     private int exp = 0;
@@ -16,11 +15,16 @@ public class PlayerShipStats {
     private final int bulletWidth;
     private final int bulletHeight;
 
-    public PlayerShipStats(int shipWidth, int shipHeight,
-                           int HP, float ATK, float moveSpeed, float bulletSpeed, int shootingInterval, int bulletWidth, int bulletHeight) {
+    private final int maxHP;
+    private final float initialATK;
+    private final float initialMoveSpeed;
+    private final float initialBulletSpeed;
+    private final int initialShootingInterval;
+
+    public PlayerShipStats(int shipWidth, int shipHeight, int HP, float ATK, float moveSpeed, float bulletSpeed,
+                           int shootingInterval, int bulletWidth, int bulletHeight) {
         this.shipWidth = shipWidth;
         this.shipHeight = shipHeight;
-        this.maxHP = HP;
         this.curHP = HP;
         this.ATK = ATK;
         this.moveSpeed = moveSpeed;
@@ -28,6 +32,12 @@ public class PlayerShipStats {
         this.shootingInterval = shootingInterval;
         this.bulletWidth = bulletWidth;
         this.bulletHeight = bulletHeight;
+
+        this.maxHP = HP;
+        this.initialATK = ATK;
+        this.initialBulletSpeed = bulletSpeed;
+        this.initialMoveSpeed = moveSpeed;
+        this.initialShootingInterval = shootingInterval;
     }
 
     public int getShipWidth() { return shipWidth; }
@@ -55,4 +65,13 @@ public class PlayerShipStats {
     public void addExp(int delta) { exp += delta; }
     public int getExp() { return exp; }
     public void resetExp() { exp -= 100; }
+
+    public void resetShipStat(){
+        this.ATK = this.initialATK;
+        this.moveSpeed = this.initialMoveSpeed;
+        this.bulletSpeed = this.initialBulletSpeed;
+        this.shootingInterval = this.initialShootingInterval;
+        this.curHP = this.maxHP;
+        this.exp = 0;
+    }
 }
