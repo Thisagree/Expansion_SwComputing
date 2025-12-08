@@ -1,30 +1,32 @@
-[INFO|3:13:07]: Started loading resources. 
-[FINE|3:13:07]: Sprite Ship1 loaded. 
-[FINE|3:13:07]: Sprite Ship2 loaded. 
-[FINE|3:13:07]: Sprite Ship3 loaded. 
-[FINE|3:13:07]: Sprite Ship4 loaded. 
-[FINE|3:13:07]: Sprite ShipDestroyed1 loaded. 
-[FINE|3:13:07]: Sprite ShipDestroyed2 loaded. 
-[FINE|3:13:07]: Sprite ShipDestroyed3 loaded. 
-[FINE|3:13:07]: Sprite ShipDestroyed4 loaded. 
-[FINE|3:13:07]: Sprite Bullet loaded. 
-[FINE|3:13:07]: Sprite EnemyBullet loaded. 
-[FINE|3:13:07]: Sprite EnemyShipA1 loaded. 
-[FINE|3:13:07]: Sprite EnemyShipA2 loaded. 
-[FINE|3:13:07]: Sprite EnemyShipB1 loaded. 
-[FINE|3:13:07]: Sprite EnemyShipB2 loaded. 
-[FINE|3:13:07]: Sprite EnemyShipC1 loaded. 
-[FINE|3:13:07]: Sprite EnemyShipC2 loaded. 
-[FINE|3:13:07]: Sprite EnemyShipSpecial loaded. 
-[FINE|3:13:07]: Sprite Explosion loaded. 
-[FINE|3:13:07]: Sprite Heart loaded. 
-[FINE|3:13:07]: Sprite ItemScore loaded. 
-[FINE|3:13:07]: Sprite ItemCoin loaded. 
-[FINE|3:13:07]: Sprite ItemHeal loaded. 
-[FINE|3:13:07]: Sprite ItemTripleShot loaded. 
-[FINE|3:13:07]: Sprite ItemScoreBooster loaded. 
-[FINE|3:13:07]: Sprite ItemBulletSpeedUp loaded. 
-[INFO|3:13:07]: Finished loading the sprites. 
-[INFO|3:13:07]: Finished loading the fonts. 
-[FINE|3:13:07]: Started looped sound: sound/menu_sound.wav 
-[INFO|3:13:07]: Starting 448x520 title screen at 60 fps. 
+[INFO|10:58:05]: Started loading resources. 
+[FINE|10:58:05]: Sprite Normal loaded. 
+[FINE|10:58:05]: Sprite BigShot loaded. 
+[FINE|10:58:05]: Sprite DoubleShot loaded. 
+[FINE|10:58:05]: Sprite MoveFast loaded. 
+[FINE|10:58:05]: Sprite ShipDestroyedNormal loaded. 
+[FINE|10:58:05]: Sprite ShipDestroyedBigShot loaded. 
+[FINE|10:58:05]: Sprite ShipDestroyedDoubleShot loaded. 
+[FINE|10:58:05]: Sprite ShipDestroyedMoveFast loaded. 
+[FINE|10:58:05]: Sprite Bullet loaded. 
+[FINE|10:58:05]: Sprite EnemyBullet loaded. 
+[FINE|10:58:05]: Sprite EnemyShipA1 loaded. 
+[FINE|10:58:05]: Sprite EnemyShipA2 loaded. 
+[FINE|10:58:05]: Sprite EnemyShipB1 loaded. 
+[FINE|10:58:05]: Sprite EnemyShipB2 loaded. 
+[FINE|10:58:05]: Sprite EnemyShipC1 loaded. 
+[FINE|10:58:05]: Sprite EnemyShipC2 loaded. 
+[FINE|10:58:05]: Sprite EnemyShipSpecial loaded. 
+[FINE|10:58:05]: Sprite Explosion loaded. 
+[FINE|10:58:05]: Sprite Heart loaded. 
+[FINE|10:58:05]: Sprite ItemScore loaded. 
+[FINE|10:58:05]: Sprite ItemCoin loaded. 
+[FINE|10:58:05]: Sprite ItemHeal loaded. 
+[FINE|10:58:05]: Sprite ItemTripleShot loaded. 
+[FINE|10:58:05]: Sprite ItemScoreBooster loaded. 
+[FINE|10:58:05]: Sprite ItemBulletSpeedUp loaded. 
+[INFO|10:58:05]: Finished loading the sprites. 
+[INFO|10:58:06]: Finished loading the fonts. 
+[INFO|10:58:06]: Launching boss battle test. 
+[INFO|10:58:06]: [GameState] Player : All effects cleared. 
+[FINE|10:58:06]: Background music started: sound/SpaceInvader-GameTheme.wav 
+[INFO|10:58:07]: Started one-shot sound: sound/CountDownSound.wav 

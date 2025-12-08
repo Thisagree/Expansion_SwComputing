@@ -1,0 +1,77 @@
+package main.entity;
+
+import java.util.HashSet;
+import java.util.Set;
+import main.entity.Entity.Team;
+/**
+ * Implements a pool of recyclable bullets.
+ *
+ * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
+ *
+ */
+public final class BulletPool {
+
+    /** Set of already created bullets. */
+    private static final Set<Bullet> pool = new HashSet<Bullet>();
+
+    private BulletPool() {
+
+    }
+
+    /**
+     * Returns a bullet from the pool if one is available, a new one if there
+     * isn't.
+     *
+     * @param positionX
+     *            Requested position of the bullet in the X axis.
+     * @param positionY
+     *            Requested position of the bullet in the Y axis.
+     * @param speedX
+     *            Requested horizontal speed of the bullet.
+     * @param speedY
+     *            Requested vertical speed of the bullet.
+     * @param width
+     *            Requested size of the bullet width.
+     * @param height
+     *            Requested size of the bullet height.
+     * @param team
+     *            Requested team type.
+     * @return Requested bullet.
+     */
+    public static Bullet getBullet(final int positionX, final int positionY,
+                                   final int speedX, final int speedY,
+                                   final int width, final int height,
+                                   final Team team) {
+
+        Bullet bullet;
+
+        if (!pool.isEmpty()) {
+            bullet = pool.iterator().next();
+            pool.remove(bullet);
+
+            bullet.setPositionX(positionX - width / 2);
+            bullet.setPositionY(positionY);
+            bullet.setSpeedX(speedX);
+            bullet.setSpeedY(speedY);
+
+        } else {
+            bullet = new Bullet(positionX, positionY, width, height, speedX, speedY);
+            bullet.setPositionX(positionX - width / 2);
+        }
+
+        bullet.setSize(width, height);
+        bullet.setTeam(team);
+        bullet.setSprite();
+        return bullet;
+    }
+
+    /**
+     * Adds one or more bullets to the list of available ones.
+     *
+     * @param bullet
+     *            Bullets to recycle.
+     */
+    public static void recycle(final Set<Bullet> bullet) {
+        pool.addAll(bullet);
+    }
+}

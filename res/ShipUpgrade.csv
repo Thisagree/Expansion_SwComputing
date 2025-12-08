@@ -1,0 +1,5 @@
+ShipType,ATTACK,MOVE_SPEED,FIRE_RATE,MAX_HP
+Normal,1,1,1,1
+BigShot,1,1,1,1
+DoubleShot,1,1,1,1
+MoveFast,1,1,1,1
